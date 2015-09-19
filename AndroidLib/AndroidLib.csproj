@@ -40,7 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Adb\Adb.cs" />
+    <Compile Include="Classes\Device.cs" />
     <Compile Include="Classes\ResourceManager.cs" />
+    <Compile Include="Classes\Utils\Command.cs" />
+    <Compile Include="Classes\Utils\Java.cs" />
+    <Compile Include="Internal Classes\ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +53,9 @@
     <Content Include="External\ADB\AdbWinApi.dll" />
     <Content Include="External\ADB\AdbWinUsbApi.dll" />
     <Content Include="External\ADB\Note.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
