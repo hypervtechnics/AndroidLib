@@ -8,6 +8,6 @@ namespace AndroidLib
 {
     public class ResourceManager
     {
-        public static string adbPrefix = "adb"; //Wenn in Windows Verzeichnis vorhanden andernfalls vollständiger Dateipfad mit Dateiname
+        public static string adbPrefix = "adb"; //If it is in environment path just "adb" otherwise it has to be fullpath with filename
     }
 }
