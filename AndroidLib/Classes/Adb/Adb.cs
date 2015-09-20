@@ -10,8 +10,17 @@ namespace AndroidLib.Adb
     {
         public static String ExecuteAdbCommandWithOutput(String command, Device device = null)
         {
-            //TODO
-            return "";
+            
+        }
+
+        /// <summary>
+        /// Gets a list of connected devices
+        /// </summary>
+        /// <param name="updateThemDirectly">Call the update method of the devices directly</param>
+        /// <returns>List of devices</returns>
+        public static List<Device> GetConnectedDevices(Boolean updateThemDirectly = false)
+        {
+            
         }
     }
 }
