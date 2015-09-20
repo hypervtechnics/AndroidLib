@@ -8,6 +8,6 @@ namespace AndroidLib
 {
     public class ResourceManager
     {
-        public static string adbPrefix = "adb"; //If it is in environment path just "adb" otherwise it has to be fullpath with filename
+        public static string adbPrefix = "adb"; //If binaries are in an environment path just set it to "adb" otherwise it has to be fullpath with filename
     }
 }
