@@ -9,6 +9,9 @@ namespace AndroidLib.Adb
     {
         #region Public Fields
 
+        /// <summary>
+        /// Returns the status of the adb status
+        /// </summary>
         public static Boolean ServerIsRunning
         {
             get
@@ -21,14 +24,20 @@ namespace AndroidLib.Adb
 
         #region Public Methods
 
+        /// <summary>
+        /// Starts the adb server instance
+        /// </summary>
         public static void StartServer()
         {
-            ExecuteAdbCommandWithOutput("start-server", null, false);
+            Command.RunProcessNoReturn(ResourceManager.adbPrefix, "start-server", true);
         }
 
+        /// <summary>
+        /// Kills the current adb server instances
+        /// </summary>
         public static void StopServer()
         {
-            ExecuteAdbCommandWithOutput("kill-server", null, false);
+            Command.RunProcessNoReturn(ResourceManager.adbPrefix, "kill-server", true);
         }
 
         /// <summary>
@@ -40,7 +49,7 @@ namespace AndroidLib.Adb
         /// <returns>The optimized output of adb</returns>
         public static String ExecuteAdbCommandWithOutput(String command, Device device = null, Boolean trimOutput = true)
         {
-            //Check whether adb is active and if not start an instance
+            //Check adb status
             if (!ServerIsRunning) StartServer();
 
             //Insert -s parameter if needed
@@ -50,6 +59,7 @@ namespace AndroidLib.Adb
             //Run process via Command class
             String output = Command.RunProcessReturnOutput(ResourceManager.adbPrefix, cmd);
 
+            //Trim if neccessary
             if (trimOutput)
                 return RemoveAdbDebugStuff(output);
             else
@@ -61,10 +71,78 @@ namespace AndroidLib.Adb
         /// </summary>
         /// <param name="updateThemDirectly">Call the update method of the devices directly</param>
         /// <returns>List of devices</returns>
-        //public static List<Device> GetConnectedDevices(Boolean updateThemDirectly = false)
-        //{
+        public static List<Device> GetConnectedDevices(Boolean updateThemDirectly = false)
+        {
+            //Instance the output
+            List<Device> devices = new List<Device>();
 
-        //}
+            //Split the output for better usage
+            String deviceString = ExecuteAdbCommandWithOutput("devices -l", null);
+            String[] deviceLines = deviceString.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            //Check whether a device is connected
+            if(deviceLines.Length == 1 && deviceLines[0].Contains("List of devices attached"))
+            {
+                return devices;
+            }
+
+            //Now parse each line
+            for(int i = 0; i < deviceLines.Length; i++)
+            {
+                //If it is debug line: cancel
+                if (deviceLines[i].Contains("List of devices attached")) continue;
+
+                //Split the device "42033ed44253c000       device product:cs02xx model:SM_G350 device:cs02"
+                String[] parts = deviceLines[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                String serialNo, model, productname, name;
+                DeviceState state;
+
+                //Get serial no
+                serialNo = parts[0];
+
+                //Determine state
+                switch(parts[1])
+                {
+                    case "device":
+                        state = DeviceState.Online;
+                        break;
+                    case "offline":
+                        state = DeviceState.Offline;
+                        break;
+                    case "unauthorized":
+                        state = DeviceState.Unauthorized;
+                        break;
+                    case "bootloader":
+                        state = DeviceState.Bootloader;
+                        break;
+                    case "unknown":
+                        state = DeviceState.Unknown;
+                        break;
+                    default:
+                        state = DeviceState.Offline;
+                        break;
+                }
+
+                //Detect product
+                productname = parts[2].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+
+                //Detect model
+                model = parts[3].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+
+                //Detect name
+                name = parts[4].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+
+                //Create, update if requested and add it to result
+                Device dev = new Device(serialNo, model, productname, name, state);
+                if (updateThemDirectly) dev.updateInfo();
+
+                devices.Add(dev);
+            }
+            
+            //Return result
+            return devices;
+        }
 
         #endregion
 
