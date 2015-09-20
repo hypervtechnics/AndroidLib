@@ -11,8 +11,16 @@ namespace LibTester
     {
         static void Main(string[] args)
         {
-            Console.Write(Adb.ExecuteAdbCommandWithOutput("devices", null, false));
-            Console.Write("FINISHED!");
+            //if (!Adb.ServerIsRunning) Adb.StartServer();
+            //Console.WriteLine("Started!");
+            //Console.Write(Adb.ExecuteAdbCommandWithOutput("devices -l", null, false));
+            //Console.Write("FINISHED!");
+            //Console.Read();
+            //Adb.StopServer();
+            //Console.WriteLine("Stopped!");
+
+            Console.WriteLine(Adb.GetConnectedDevices().Count);
+
             Console.Read();
         }
     }
