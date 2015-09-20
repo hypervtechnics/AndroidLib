@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5847715B-EFD1-4ED8-9D36-7A3425AB472A}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{F0CB20A2-BBB4-4ECE-9109-96F192D6CE80}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AndroidLib</RootNamespace>
-    <AssemblyName>AndroidLib</AssemblyName>
+    <RootNamespace>LibTester</RootNamespace>
+    <AssemblyName>LibTester</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,23 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Adb\Adb.cs" />
-    <Compile Include="Classes\Device.cs" />
-    <Compile Include="Classes\ResourceManager.cs" />
-    <Compile Include="Classes\Utils\Array.cs" />
-    <Compile Include="Classes\Utils\Command.cs" />
-    <Compile Include="Classes\Utils\Java.cs" />
-    <Compile Include="Internal Classes\ExtensionMethods.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="External\ADB\adb.exe" />
-    <Content Include="External\ADB\AdbWinApi.dll" />
-    <Content Include="External\ADB\AdbWinUsbApi.dll" />
-    <Content Include="External\ADB\Note.txt" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classes\Exceptions\" />
+    <ProjectReference Include="..\AndroidLib\AndroidLib.csproj">
+      <Project>{5847715b-efd1-4ed8-9d36-7a3425ab472a}</Project>
+      <Name>AndroidLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
