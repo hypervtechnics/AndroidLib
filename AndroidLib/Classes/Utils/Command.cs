@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace AndroidLib.Utils
@@ -150,15 +151,8 @@ namespace AndroidLib.Utils
 
         public static bool IsProcessRunning(string processName)
         {
-            Process[] processes = Process.GetProcesses();
-            for (int i = 0; i < processes.Length; i++)
-            {
-                if (processes[i].ProcessName.ToLower().Contains(processName.ToLower()))
-                {
-                    return true;
-                }
-            }
-            return false;
+            Process[] processes = Process.GetProcessesByName(processName);
+            return processes.Length > 0;
         }
 
         public static void KillProcess(string processName)
