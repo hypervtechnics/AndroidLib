@@ -19,7 +19,9 @@ namespace LibTester
             //Adb.StopServer();
             //Console.WriteLine("Stopped!");
 
-            Console.WriteLine(Adb.GetConnectedDevices().Count);
+            List<AndroidLib.Device> devices = Adb.GetConnectedDevices();
+
+            Console.WriteLine(devices.Count);
 
             Console.Read();
         }
