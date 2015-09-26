@@ -76,9 +76,10 @@ namespace AndroidLib.Adb
             //Instance the output
             List<Device> devices = new List<Device>();
 
+            //Output: "List of devices attached \r\r\nXXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX\r\r\n\r\r\n\r\n";
             //Split the output for better usage
             String deviceString = ExecuteAdbCommandWithOutput("devices -l", null);
-            String[] deviceLines = deviceString.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            String[] deviceLines = deviceString.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             //Check whether a device is connected
             if(deviceLines.Length == 1 && deviceLines[0].Contains("List of devices attached"))
@@ -90,9 +91,9 @@ namespace AndroidLib.Adb
             for(int i = 0; i < deviceLines.Length; i++)
             {
                 //If it is debug line: cancel
-                if (deviceLines[i].Contains("List of devices attached")) continue;
+                if (deviceLines[i].Contains("List of devices attached") || String.IsNullOrWhiteSpace(deviceLines[i]) || deviceLines[i] == "\r\n") continue;
 
-                //Split the device "42033ed44253c000       device product:cs02xx model:SM_G350 device:cs02"
+                //Split the device line ("XXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX")
                 String[] parts = deviceLines[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
                 String serialNo, model, productname, name;
