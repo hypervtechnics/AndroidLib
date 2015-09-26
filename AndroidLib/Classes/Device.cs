@@ -26,9 +26,7 @@ namespace AndroidLib
             mName = name;
             this.updateInfo();
         }
-
-
-
+        
         #endregion
 
         #region Private Fields
@@ -42,7 +40,6 @@ namespace AndroidLib
         #endregion
 
         #region Public Fields
-
 
         /// <summary>
         /// Returns the serial number of the device
@@ -67,7 +64,7 @@ namespace AndroidLib
         }
 
         /// <summary>
-        /// Returns the product name of your device
+        /// Returns the product name of the device
         /// </summary>
         public String ProductName
         {
@@ -77,6 +74,9 @@ namespace AndroidLib
             }
         }
 
+        /// <summary>
+        /// Returns the name of the device
+        /// </summary>
         public String Name
         {
             get
