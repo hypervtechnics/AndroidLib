@@ -145,6 +145,25 @@ namespace AndroidLib.Adb
             return devices;
         }
 
+        /// <summary>
+        /// Checks if the device is connected
+        /// </summary>
+        /// <param name="serialNo">The serial number of the device</param>
+        /// <returns>Whether the device is connected</returns>
+        public static Boolean IsDeviceConnected(String serialNo)
+        {
+            List<Device> connectedDevices = GetConnectedDevices();
+
+            if (connectedDevices.Count == 0) return false;
+
+            foreach (Device dev in connectedDevices)
+            {
+                if (dev.SerialNumber == serialNo) return true;
+            }
+
+            return false;
+        }
+
         #endregion
 
         #region Internal Methods
