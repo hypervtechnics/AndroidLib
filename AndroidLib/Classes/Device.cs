@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AndroidLib.Adb;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -115,6 +116,19 @@ namespace AndroidLib
         public void Update()
         {
             this.updateInfo();
+        }
+
+        /// <summary>
+        /// Pulls the file or directory to the device
+        /// </summary>
+        /// <param name="pathOnDevice"></param>
+        /// <param name="pathOnComputer"></param>
+        /// <returns></returns>
+        public String Pull(String pathOnDevice, String pathOnComputer)
+        {
+            String output = Adb.Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this, false);
+            
+            return output;
         }
 
         #endregion

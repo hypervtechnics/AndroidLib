@@ -1,4 +1,5 @@
 ﻿using AndroidLib.Adb;
+using AndroidLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,16 @@ namespace LibTester
             List<AndroidLib.Device> devices = Adb.GetConnectedDevices();
 
             Console.WriteLine(devices.Count);
+
+            Console.Read();
+
+            Device dev = devices[0];
+
+            Console.Read();
+
+            Console.WriteLine(dev.SerialNumber);
+
+            Console.WriteLine(dev.Pull("/sdcard/TMemo", "C:\\Android\\WA"));
 
             Console.Read();
         }
