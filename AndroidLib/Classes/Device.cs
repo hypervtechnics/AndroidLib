@@ -17,7 +17,7 @@ namespace AndroidLib
         /// <param name="model">The model of the device</param>
         /// <param name="productName">The product name of the device</param>
         /// <param name="state">The state of the device</param>
-        public Device(String serialNo, String model, String productName, String name, DeviceState state)
+        internal Device(String serialNo, String model, String productName, String name, DeviceState state)
         {
             mSerialNumber = serialNo;
             mProductName = productName;
@@ -121,6 +121,7 @@ namespace AndroidLib
     }
 
     #region State of devices
+
     public enum DeviceState
     {
         Unknown,
@@ -129,5 +130,6 @@ namespace AndroidLib
         Bootloader,
         Unauthorized
     }
+
     #endregion
 }
