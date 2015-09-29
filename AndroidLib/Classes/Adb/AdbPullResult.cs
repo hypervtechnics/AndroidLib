@@ -6,35 +6,40 @@ using System.Threading.Tasks;
 
 namespace AndroidLib.Adb
 {
-    public class AdbPullResult
+    public class AdbPushPullResult
     {
-        private int mFileCount;
-        private Dictionary<String, String> mFiles;
+        private int mTransferRate;
+        private int mFileCountCopied;
         private Boolean mSuccess;
         private Boolean mSingleFile;
+        private long mFileSize;
+        private Dictionary<String, String> mFiles;
+        private Double mSecondsNeeded;
 
-        public AdbPullResult(int filecount, Dictionary<String, String> files, Boolean success, Boolean singlefile)
+        public AdbPushPullResult(int transferrate, int filecountcopied, Boolean success, Boolean singlefile, long filesize, Dictionary<String, String> files, Double secondsneeded)
         {
-            this.mFileCount = filecount;
-            this.mFiles = files;
+            this.mTransferRate = transferrate;
+            this.mFileCountCopied = filecountcopied;
             this.mSuccess = success;
             this.mSingleFile = singlefile;
+            this.mFileSize = filesize;
+            this.mFiles = files;
+            this.mSecondsNeeded = secondsneeded;
         }
 
-
-        public int FileCount
+        public int TransferRate
         {
             get
             {
-                return mFileCount;
+                return mTransferRate;
             }
         }
 
-        public Dictionary<String, String> Files
+        public int FileCountCopied
         {
             get
             {
-                return mFiles;
+                return mFileCountCopied;
             }
         }
 
@@ -54,6 +59,29 @@ namespace AndroidLib.Adb
             }
         }
 
-    }
+        public long FileSize
+        {
+            get
+            {
+                return mFileSize;
+            }
+        }
 
+        public Dictionary<String, String> Files
+        {
+            get
+            {
+                return mFiles;
+            }
+        }
+
+        public Double SecondsNeeded
+        {
+            get
+            {
+                return mSecondsNeeded;
+            }
+        }
+
+    }
 }
