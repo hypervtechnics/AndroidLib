@@ -32,9 +32,9 @@ namespace LibTester
 
             Console.WriteLine(dev.SerialNumber);
 
-            //Console.WriteLine(dev.Pull("/sdcard/TMemo", "C:\\Android\\WA"));
+            Console.WriteLine(dev.Pull("/sdcard/TMemo", "C:\\Android\\WA"));
 
-            Console.Read();
+            Console.ReadLine();
         }
     }
 }
