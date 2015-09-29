@@ -54,7 +54,7 @@ namespace AndroidLib.Adb
 
             //Insert -s parameter if needed
             String cmd = command;
-            if (device != null && device.SerialNumber != "") cmd = "-s " + device.SerialNumber + "" + cmd;
+            if (device != null && device.SerialNumber != "") cmd = " -s " + device.SerialNumber + " " + cmd;
 
             //Run process via Command class
             String output = Command.RunProcessReturnOutput(ResourceManager.adbPrefix, cmd);
