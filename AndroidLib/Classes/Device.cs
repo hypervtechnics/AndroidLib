@@ -131,6 +131,13 @@ namespace AndroidLib
             return output;
         }
 
+        public String Push(String pathOnComputer, String pathOnDevice)
+        {
+            String output = Adb.Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this, false);
+
+            return output;
+        }
+
         #endregion
     }
 
