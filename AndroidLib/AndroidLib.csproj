@@ -55,6 +55,7 @@
     <Content Include="External\ADB\AdbWinApi.dll" />
     <Content Include="External\ADB\AdbWinUsbApi.dll" />
     <Content Include="External\ADB\Note.txt" />
+    <Content Include="Notes\AdbPull.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\Exceptions\" />
