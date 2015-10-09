@@ -12,7 +12,7 @@ namespace AndroidLib.Adb
         /// <summary>
         /// Returns the status of the adb status
         /// </summary>
-        public static Boolean ServerIsRunning
+        public static Boolean IsServerRunning
         {
             get
             {
@@ -23,6 +23,18 @@ namespace AndroidLib.Adb
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Remounts the adb with the given type
+        /// </summary>
+        /// <param name="type">The mode to remount in</param>
+        public static void SetMountType(AdbMountType type)
+        {
+            if (type == AdbMountType.Root)
+                ExecuteAdbCommandWithOutput("root");
+            else
+                ExecuteAdbCommandWithOutput("unroot");
+        }
 
         /// <summary>
         /// Starts the adb server instance
@@ -45,12 +57,11 @@ namespace AndroidLib.Adb
         /// </summary>
         /// <param name="command">Command to run e.g. "devices"</param>
         /// <param name="device">If this parameter is not set the first device will be selected</param>
-        /// <param name="trimOutput">Remove stuff like "*daemon started successfully*" from output</param>
         /// <returns>The optimized output of adb</returns>
-        public static String ExecuteAdbCommandWithOutput(String command, Device device = null, Boolean trimOutput = true)
+        public static String ExecuteAdbCommandWithOutput(String command, Device device = null)
         {
             //Check adb status
-            if (!ServerIsRunning) StartServer();
+            if (!IsServerRunning) StartServer();
 
             //Insert -s parameter if needed
             String cmd = command;
@@ -59,11 +70,7 @@ namespace AndroidLib.Adb
             //Run process via Command class
             String output = Command.RunProcessReturnOutput(ResourceManager.adbPrefix, cmd);
 
-            //Trim if neccessary
-            if (trimOutput)
-                return RemoveAdbDebugStuff(output);
-            else
-                return output;
+            return output;
         }
 
         /// <summary>
@@ -76,10 +83,10 @@ namespace AndroidLib.Adb
             //Instance the output
             List<Device> devices = new List<Device>();
 
-            //Output: "List of devices attached \r\r\nXXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX\r\r\n\r\r\n\r\n";
+            //Output: "List of devices attached \r\nXXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX\r\n\r\n";
             //Split the output for better usage
             String deviceString = ExecuteAdbCommandWithOutput("devices -l", null);
-            String[] deviceLines = deviceString.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            String[] deviceLines = deviceString.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             //Check whether a device is connected
             if(deviceLines.Length == 1 && deviceLines[0].Contains("List of devices attached"))
@@ -152,6 +159,7 @@ namespace AndroidLib.Adb
         /// <returns>Whether the device is connected</returns>
         public static Boolean IsDeviceConnected(String serialNo)
         {
+            //Get list of connected devices and check whether one of them has the given serial number
             List<Device> connectedDevices = GetConnectedDevices();
 
             if (connectedDevices.Count == 0) return false;
@@ -165,44 +173,11 @@ namespace AndroidLib.Adb
         }
 
         #endregion
+    }
 
-        #region Internal Methods
-
-        /// <summary>
-        /// Removes adb debug lines from output
-        /// </summary>
-        /// <param name="adbOutput">The output to be cleaned</param>
-        /// <returns>Optimized output</returns>
-        internal static String RemoveAdbDebugStuff(String adbOutput)
-        {
-            //Store the lines to be removed in here...
-            String[] blackLines = { "adb server is out of date. killing...", "* daemon not running. starting it now on port 5037 *", "* daemon started successfully *" };
-
-
-            StringBuilder output = new StringBuilder();
-
-            //Are their multiple lines?
-            if(adbOutput.Contains("\n"))
-            {
-                //Get the lines of output
-                string[] lines = adbOutput.Split(new string[] { "\n" }, StringSplitOptions.None);
-
-                //Check the if the lines are one of the black listed lines
-                for(int i = 0; i < lines.Length; i++)
-                {
-                    if (Utils.Array.IsInArray(blackLines, lines[i]) == -1) output.AppendLine(lines[i]);
-                }
-            }
-            else
-            {
-                //Only one line
-                if (Utils.Array.IsInArray(blackLines, adbOutput) == -1) output.AppendLine(adbOutput);
-            }
-
-            //Return output
-            return output.ToString();
-        }
-            
-        #endregion
+    public enum AdbMountType
+    {
+        Root,
+        NonRoot
     }
 }
