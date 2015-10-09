@@ -119,11 +119,11 @@ namespace AndroidLib
         }
 
         /// <summary>
-        /// Pulls the file or directory to the device
+        /// Pulls the file or directory from the device
         /// </summary>
-        /// <param name="pathOnDevice"></param>
-        /// <param name="pathOnComputer"></param>
-        /// <returns></returns>
+        /// <param name="pathOnDevice">The path of the file or directory on the device</param>
+        /// <param name="pathOnComputer">The target path (like 'C:\Android')</param>
+        /// <returns>The AdbPushPullResult containing the infos about the transfer</returns>
         public AdbPushPullResult Pull(String pathOnDevice, String pathOnComputer)
         {
             //Do it and get its output for further analysis
@@ -165,8 +165,8 @@ namespace AndroidLib
             {
                 singlefile = false;
 
-                //Add 
-                for(int i = 1; i < lines.Length - 2; i++)
+                //Add them to the dictionary
+                for (int i = 1; i < lines.Length - 2; i++)
                 {
                     if (!lines[i].StartsWith("pull:")) continue;
 
@@ -191,11 +191,77 @@ namespace AndroidLib
             return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
         }
 
-        public String Push(String pathOnComputer, String pathOnDevice)
+        /// <summary>
+        /// Pushs the file or directory to the device
+        /// </summary>
+        /// <param name="pathOnComputer">The path of the file or directory on the computer</param>
+        /// <param name="pathOnDevice">The target path</param>
+        /// <returns>The AdbPushPullResult containing the infos about the transfer</returns>
+        public AdbPushPullResult Push(String pathOnComputer, String pathOnDevice)
         {
+            //Do it and get its output for further analysis
             String output = Adb.Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
 
-            return output;
+            //Split it into the lines
+            String[] lines = output.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            //Store values for creation of the result
+            int transferrate = 0;
+            Boolean success = false, singlefile = true;
+            long size = 0L;
+            Double secondsneeded = 0.0;
+            Dictionary<String, String> files = new Dictionary<String, String>();
+            ErrorType error = ErrorType.None;
+
+            //Check whether it was successful and if not abort it
+            if (lines[0].StartsWith("error:"))
+            {
+                error = ErrorType.Unknown;
+                return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+            }
+            else if (lines[0].StartsWith("cannot create"))
+            {
+                error = ErrorType.NoSuchFileOrDirectory;
+                return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+            }
+            else if (lines[0].StartsWith("remote object"))
+            {
+                error = ErrorType.RemoteObjectNotFound;
+                return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+            }
+
+            //Seems successful
+            success = true;
+
+            //Indicate whether it was a single file or multiple files
+            if (lines.Length >= 5)
+            {
+                singlefile = false;
+
+                //Add them to the dictionary
+                for (int i = 0; i < lines.Length - 2; i++)
+                {
+                    if (!lines[i].StartsWith("push:")) continue;
+
+                    String tmpLine = lines[i].After("push:");
+                    String[] tmpSplit = tmpLine.Split(new String[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    files.Add(tmpSplit[0].Trim(), tmpSplit[1].Trim());
+                }
+            }
+            else
+            {
+                files.Add(pathOnDevice, pathOnComputer);
+            }
+
+            //Parse last line
+            String lastLine = lines[lines.Length - 1];
+            transferrate = int.Parse(lastLine.Before(" "));
+            size = long.Parse(lastLine.Between(" (", " bytes"));
+            secondsneeded = Double.Parse(lastLine.Between("bytes in ", "s"), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
+
+            //Finally return the object
+            return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
         }
 
         #endregion
