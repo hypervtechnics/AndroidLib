@@ -124,16 +124,76 @@ namespace AndroidLib
         /// <param name="pathOnDevice"></param>
         /// <param name="pathOnComputer"></param>
         /// <returns></returns>
-        public String Pull(String pathOnDevice, String pathOnComputer)
+        public AdbPushPullResult Pull(String pathOnDevice, String pathOnComputer)
         {
-            String output = Adb.Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this, false);
-            
-            return output;
+            //Do it and get its output for further analysis
+            String output = Adb.Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this);
+
+            //Split it into the lines
+            String[] lines = output.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            //Store values for creation of the result
+            int transferrate = 0;
+            Boolean success = false, singlefile = true;
+            long size = 0L;
+            Double secondsneeded = 0.0;
+            Dictionary<String, String> files = new Dictionary<String, String>();
+            ErrorType error = ErrorType.None;
+
+            //Check whether it was successful and if not abort it
+            if (lines[0].StartsWith("error:"))
+            {
+                error = ErrorType.Unknown;
+                return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+            }
+            else if(lines[0].StartsWith("cannot create"))
+            {
+                error = ErrorType.NoSuchFileOrDirectory;
+                return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+            }
+            else if(lines[0].StartsWith("remote object"))
+            {
+                error = ErrorType.RemoteObjectNotFound;
+                return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+            }
+
+            //Seems successful
+            success = true;
+
+            //Indicate whether it was a single file or multiple files
+            if(lines[0].StartsWith("pull: building file list...") && lines.Length >= 5)
+            {
+                singlefile = false;
+
+                //Add 
+                for(int i = 1; i < lines.Length - 2; i++)
+                {
+                    if (!lines[i].StartsWith("pull:")) continue;
+
+                    String tmpLine = lines[i].After("pull:");
+                    String[] tmpSplit = tmpLine.Split(new String[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    files.Add(tmpSplit[0].Trim(), tmpSplit[1].Trim());
+                }
+            }
+            else
+            {
+                files.Add(pathOnDevice, pathOnComputer);
+            }
+
+            //Parse last line
+            String lastLine = lines[lines.Length - 1];
+            transferrate = int.Parse(lastLine.Before(" "));
+            size = long.Parse(lastLine.Between(" (", " bytes"));
+            secondsneeded = Double.Parse(lastLine.Between("bytes in ", "s"));
+
+            //Finally return the object
+            return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
         }
 
         public String Push(String pathOnComputer, String pathOnDevice)
         {
-            String output = Adb.Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this, false);
+            String output = Adb.Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
 
             return output;
         }
