@@ -37,6 +37,8 @@ namespace LibTester
             Console.WriteLine(result.Files.Count);
 
             Console.ReadLine();
+
+            Adb.StopServer();
         }
     }
 }
