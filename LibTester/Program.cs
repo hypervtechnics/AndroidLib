@@ -32,7 +32,7 @@ namespace LibTester
 
             Console.WriteLine(dev.SerialNumber);
 
-            AdbPushPullResult result = dev.Pull("/sdcard/Download/Elternanschreiben Schweden_2016.doc", @"C:\Android\sch.doc");
+            AdbPushPullResult result = dev.Push(@"C:\Android\WA", "/sdcard/TESTER");
 
             Console.WriteLine(result.Files.Count);
 
