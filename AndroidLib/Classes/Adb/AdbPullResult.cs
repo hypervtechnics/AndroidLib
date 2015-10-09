@@ -9,24 +9,29 @@ namespace AndroidLib.Adb
     public class AdbPushPullResult
     {
         private int mTransferRate;
-        private int mFileCountCopied;
         private Boolean mSuccess;
         private Boolean mSingleFile;
         private long mFileSize;
         private Dictionary<String, String> mFiles;
         private Double mSecondsNeeded;
+        private String mOutput;
+        private ErrorType mError;
 
-        public AdbPushPullResult(int transferrate, int filecountcopied, Boolean success, Boolean singlefile, long filesize, Dictionary<String, String> files, Double secondsneeded)
+        public AdbPushPullResult(int transferrate, Boolean success, Boolean singlefile, long filesize, Dictionary<String, String> files, Double secondsneeded, String output, ErrorType error)
         {
             this.mTransferRate = transferrate;
-            this.mFileCountCopied = filecountcopied;
             this.mSuccess = success;
             this.mSingleFile = singlefile;
             this.mFileSize = filesize;
             this.mFiles = files;
             this.mSecondsNeeded = secondsneeded;
+            this.mOutput = output;
+            this.mError = error;
         }
 
+        /// <summary>
+        /// The transfer rate of the process
+        /// </summary>
         public int TransferRate
         {
             get
@@ -35,14 +40,9 @@ namespace AndroidLib.Adb
             }
         }
 
-        public int FileCountCopied
-        {
-            get
-            {
-                return mFileCountCopied;
-            }
-        }
-
+        /// <summary>
+        /// Indicates whether the command was executed successfully
+        /// </summary>
         public Boolean Success
         {
             get
@@ -50,7 +50,10 @@ namespace AndroidLib.Adb
                 return mSuccess;
             }
         }
-
+        
+        /// <summary>
+        /// Indicates whether it was required to build a file list or not
+        /// </summary>
         public Boolean SingleFile
         {
             get
@@ -59,6 +62,9 @@ namespace AndroidLib.Adb
             }
         }
 
+        /// <summary>
+        /// The amount of bytes transfered
+        /// </summary>
         public long FileSize
         {
             get
@@ -67,6 +73,9 @@ namespace AndroidLib.Adb
             }
         }
 
+        /// <summary>
+        /// If there were multiple files these are stored in here
+        /// </summary>
         public Dictionary<String, String> Files
         {
             get
@@ -75,6 +84,9 @@ namespace AndroidLib.Adb
             }
         }
 
+        /// <summary>
+        /// Time needed to transfer the file(s)
+        /// </summary>
         public Double SecondsNeeded
         {
             get
@@ -83,5 +95,34 @@ namespace AndroidLib.Adb
             }
         }
 
+        /// <summary>
+        /// The output of Adb
+        /// </summary>
+        public String Output
+        {
+            get
+            {
+                return mOutput;
+            }
+        }
+        
+        /// <summary>
+        /// If an error occured you will know here which one
+        /// </summary>
+        public ErrorType Error
+        {
+            get
+            {
+                return mError;
+            }
+        }
+    }
+
+    public enum ErrorType
+    {
+        RemoteObjectNotFound,
+        NoSuchFileOrDirectory,
+        Unknown,
+        None
     }
 }
