@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Adb\Adb.cs" />
-    <Compile Include="Classes\Adb\AdbPullResult.cs" />
+    <Compile Include="Classes\Adb\AdbPushPullResult.cs" />
     <Compile Include="Classes\Device.cs" />
     <Compile Include="Classes\ResourceManager.cs" />
     <Compile Include="Classes\Utils\Array.cs" />
