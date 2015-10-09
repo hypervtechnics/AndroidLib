@@ -30,7 +30,7 @@ namespace AndroidLib.Adb
         }
 
         /// <summary>
-        /// The transfer rate of the process
+        /// The transfer rate of the process in KB/s
         /// </summary>
         public int TransferRate
         {
