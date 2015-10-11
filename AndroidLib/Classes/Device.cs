@@ -118,6 +118,11 @@ namespace AndroidLib
             this.updateInfo();
         }
 
+        public  InstallApk(String path, Boolean forwardLock, Boolean replaceExisting, Boolean allowTest, Boolean installOnSd, Boolean allowDowngrade, Boolean grantAllPermissions)
+        {
+
+        }
+
         /// <summary>
         /// Pulls the file or directory from the device
         /// </summary>
