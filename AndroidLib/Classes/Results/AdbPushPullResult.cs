@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AndroidLib.Adb
+namespace AndroidLib.Results
 {
     public class AdbPushPullResult
     {

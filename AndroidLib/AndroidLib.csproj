@@ -41,9 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Adb\Adb.cs" />
-    <Compile Include="Classes\Adb\AdbInstallResult.cs" />
-    <Compile Include="Classes\Adb\AdbPushPullResult.cs" />
-    <Compile Include="Classes\Device.cs" />
+    <Compile Include="Classes\Results\AdbInstallResult.cs" />
+    <Compile Include="Classes\Results\AdbPushPullResult.cs" />
+    <Compile Include="Classes\Adb\Device.cs" />
     <Compile Include="Classes\ResourceManager.cs" />
     <Compile Include="Classes\Utils\Array.cs" />
     <Compile Include="Classes\Utils\Command.cs" />
@@ -59,7 +59,7 @@
     <Content Include="Notes\AdbPull.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classes\Exceptions\" />
+    <Folder Include="Classes\Wrapper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

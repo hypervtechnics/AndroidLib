@@ -1,11 +1,11 @@
-﻿using AndroidLib.Adb;
+﻿using AndroidLib.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AndroidLib
+namespace AndroidLib.Adb
 {
     public class Device
     {
@@ -118,9 +118,34 @@ namespace AndroidLib
             this.updateInfo();
         }
 
-        public  InstallApk(String path, Boolean forwardLock, Boolean replaceExisting, Boolean allowTest, Boolean installOnSd, Boolean allowDowngrade, Boolean grantAllPermissions)
+        /// <summary>
+        /// Installs the given APK file on the device
+        /// </summary>
+        /// <param name="apkPath">The path of the apk file</param>
+        /// <param name="forwardLock">Forward lock application</param>
+        /// <param name="replaceExisting">Replace existing application</param>
+        /// <param name="allowTest">Allow test packages</param>
+        /// <param name="installOnSd">Install application on sdcard</param>
+        /// <param name="allowDowngrade">Allow version code downgrade</param>
+        /// <param name="grantAllPermissions">Grant all runtime permissions</param>
+        /// <returns>An object containing the information about the installation process</returns>
+        public AdbInstallResult InstallApk(String apkPath, Boolean forwardLock, Boolean replaceExisting, Boolean allowTest, Boolean installOnSd, Boolean allowDowngrade, Boolean grantAllPermissions)
         {
+            //Initialize empty string
+            String command = "install ";
 
+            //Now form it
+            if (forwardLock) command += "-l ";
+            if (replaceExisting) command += "-r ";
+            if (allowTest) command += "-t ";
+            if (installOnSd) command += "-s ";
+            if (allowDowngrade) command += "-d ";
+            if (grantAllPermissions) command += "-g ";
+            command += "\"" + apkPath + "\"";
+
+            String output = Adb.ExecuteAdbCommandWithOutput(command, this);
+
+            return new AdbInstallResult(output.Contains("Success"), output);
         }
 
         /// <summary>
@@ -132,7 +157,7 @@ namespace AndroidLib
         public AdbPushPullResult Pull(String pathOnDevice, String pathOnComputer)
         {
             //Do it and get its output for further analysis
-            String output = Adb.Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this);
+            String output = Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this);
 
             //Split it into the lines
             String[] lines = output.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -205,7 +230,7 @@ namespace AndroidLib
         public AdbPushPullResult Push(String pathOnComputer, String pathOnDevice)
         {
             //Do it and get its output for further analysis
-            String output = Adb.Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
+            String output = Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
 
             //Split it into the lines
             String[] lines = output.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);

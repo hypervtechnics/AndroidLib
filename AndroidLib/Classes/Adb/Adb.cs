@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AndroidLib.Utils;
-using System.Text;
 
 namespace AndroidLib.Adb
 {
