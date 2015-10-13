@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AndroidLib
+﻿namespace AndroidLib
 {
     public enum DeviceState
     {
@@ -27,5 +21,12 @@ namespace AndroidLib
         NoSuchFileOrDirectory,
         Unknown,
         None
+    }
+
+    public enum RebootMode
+    {
+        Normal,
+        Bootloader,
+        Recovery
     }
 }

@@ -1,9 +1,6 @@
 ﻿using AndroidLib.Results;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AndroidLib.Adb
 {
@@ -293,6 +290,30 @@ namespace AndroidLib.Adb
 
             //Finally return the object
             return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
+        }
+
+
+        /// <summary>
+        /// Remounts the /system, /vendor (if present) and /oem (if present) partitions on the device read-write.
+        /// </summary>
+        public void Remount()
+        {
+            Adb.ExecuteAdbCommandWithOutput("remount", this);
+        }
+
+        /// <summary>
+        /// Reboots the device into a specific mode
+        /// </summary>
+        /// <param name="mode">The mode to reboot in</param>
+        public void RebootInto(RebootMode mode)
+        {
+            //Decide which mode to use and set a standard mode
+            String cmd = "reboot";
+
+            if (mode == RebootMode.Bootloader) cmd += " bootloader";
+            else if (mode == RebootMode.Recovery) cmd += " recovery";
+
+            Adb.ExecuteAdbCommandWithOutput(cmd, this);
         }
 
         #endregion
