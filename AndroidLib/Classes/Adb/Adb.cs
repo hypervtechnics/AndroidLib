@@ -57,17 +57,17 @@ namespace AndroidLib.Adb
         /// <param name="command">Command to run e.g. "devices"</param>
         /// <param name="device">If this parameter is not set the first device will be selected</param>
         /// <returns>The optimized output of adb</returns>
-        public static String ExecuteAdbCommandWithOutput(String command, Device device = null)
+        public static string ExecuteAdbCommandWithOutput(string command, Device device = null)
         {
             //Check adb status
             if (!IsServerRunning) StartServer();
 
             //Insert -s parameter if needed
-            String cmd = command;
+            string cmd = command;
             if (device != null && device.SerialNumber != "") cmd = " -s " + device.SerialNumber + " " + cmd;
 
             //Run process via Command class
-            String output = Command.RunProcessReturnOutput(ResourceManager.adbPrefix, cmd);
+            string output = Command.RunProcessReturnOutput(ResourceManager.adbPrefix, cmd);
 
             return output;
         }
@@ -84,8 +84,8 @@ namespace AndroidLib.Adb
 
             //Output: "List of devices attached \r\nXXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX\r\n\r\n";
             //Split the output for better usage
-            String deviceString = ExecuteAdbCommandWithOutput("devices -l", null);
-            String[] deviceLines = deviceString.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string deviceString = ExecuteAdbCommandWithOutput("devices -l", null);
+            string[] deviceLines = deviceString.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             //Check whether a device is connected
             if(deviceLines.Length == 1 && deviceLines[0].Contains("List of devices attached"))
@@ -97,12 +97,12 @@ namespace AndroidLib.Adb
             for(int i = 0; i < deviceLines.Length; i++)
             {
                 //If it is debug line: cancel
-                if (deviceLines[i].Contains("List of devices attached") || String.IsNullOrWhiteSpace(deviceLines[i]) || deviceLines[i] == "\r\n") continue;
+                if (deviceLines[i].Contains("List of devices attached") || string.IsNullOrWhiteSpace(deviceLines[i]) || deviceLines[i] == "\r\n") continue;
 
                 //Split the device line ("XXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX")
-                String[] parts = deviceLines[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = deviceLines[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-                String serialNo, model, productname, name;
+                string serialNo, model, productname, name;
                 DeviceState state;
 
                 //Get serial no
@@ -156,7 +156,7 @@ namespace AndroidLib.Adb
         /// </summary>
         /// <param name="serialNo">The serial number of the device</param>
         /// <returns>Whether the device is connected</returns>
-        public static Boolean IsDeviceConnected(String serialNo)
+        public static Boolean IsDeviceConnected(string serialNo)
         {
             //Get list of connected devices and check whether one of them has the given serial number
             List<Device> connectedDevices = GetConnectedDevices();
@@ -169,6 +169,14 @@ namespace AndroidLib.Adb
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Wait for a device to connect
+        /// </summary>
+        public static void WaitForDevice()
+        {
+            string output = ExecuteAdbCommandWithOutput("wait-for-device");
         }
 
         #endregion

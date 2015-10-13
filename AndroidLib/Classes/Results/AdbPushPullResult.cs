@@ -12,12 +12,12 @@ namespace AndroidLib.Results
         private Boolean mSuccess;
         private Boolean mSingleFile;
         private long mFileSize;
-        private Dictionary<String, String> mFiles;
+        private Dictionary<string, string> mFiles;
         private Double mSecondsNeeded;
-        private String mOutput;
+        private string mOutput;
         private ErrorType mError;
 
-        public AdbPushPullResult(int transferrate, Boolean success, Boolean singlefile, long filesize, Dictionary<String, String> files, Double secondsneeded, String output, ErrorType error)
+        public AdbPushPullResult(int transferrate, Boolean success, Boolean singlefile, long filesize, Dictionary<string, string> files, Double secondsneeded, string output, ErrorType error)
         {
             this.mTransferRate = transferrate;
             this.mSuccess = success;
@@ -76,7 +76,7 @@ namespace AndroidLib.Results
         /// <summary>
         /// If there were multiple files these are stored in here
         /// </summary>
-        public Dictionary<String, String> Files
+        public Dictionary<string, string> Files
         {
             get
             {
@@ -98,7 +98,7 @@ namespace AndroidLib.Results
         /// <summary>
         /// The output of Adb
         /// </summary>
-        public String Output
+        public string Output
         {
             get
             {

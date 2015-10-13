@@ -9,9 +9,9 @@ namespace AndroidLib.Results
     public class AdbInstallResult
     {
         private Boolean mSuccess;
-        private String mOutput;
+        private string mOutput;
 
-        public AdbInstallResult(Boolean success, String output)
+        public AdbInstallResult(Boolean success, string output)
         {
             this.mSuccess = success;
             this.mOutput = output;
@@ -31,7 +31,7 @@ namespace AndroidLib.Results
         /// <summary>
         /// If Success is false then you can see the output of it here
         /// </summary>
-        public String Output
+        public string Output
         {
             get
             {

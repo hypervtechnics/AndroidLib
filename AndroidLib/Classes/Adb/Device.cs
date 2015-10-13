@@ -18,7 +18,7 @@ namespace AndroidLib.Adb
         /// <param name="model">The model of the device</param>
         /// <param name="productName">The product name of the device</param>
         /// <param name="state">The state of the device</param>
-        internal Device(String serialNo, String model, String productName, String name, DeviceState state)
+        internal Device(string serialNo, string model, string productName, string name, DeviceState state)
         {
             mSerialNumber = serialNo;
             mProductName = productName;
@@ -32,11 +32,11 @@ namespace AndroidLib.Adb
 
         #region Private Fields
 
-        private String mSerialNumber;
-        private String mModel;
-        private String mProductName;
+        private string mSerialNumber;
+        private string mModel;
+        private string mProductName;
         private DeviceState mConnectionStatus;
-        private String mName;
+        private string mName;
 
         #endregion
 
@@ -45,7 +45,7 @@ namespace AndroidLib.Adb
         /// <summary>
         /// Returns the serial number of the device
         /// </summary>
-        public String SerialNumber
+        public string SerialNumber
         {
             get
             {
@@ -56,7 +56,7 @@ namespace AndroidLib.Adb
         /// <summary>
         /// Returns the model number of the device
         /// </summary>
-        public String Model
+        public string Model
         {
             get
             {
@@ -67,7 +67,7 @@ namespace AndroidLib.Adb
         /// <summary>
         /// Returns the product name of the device
         /// </summary>
-        public String ProductName
+        public string ProductName
         {
             get
             {
@@ -78,7 +78,7 @@ namespace AndroidLib.Adb
         /// <summary>
         /// Returns the name of the device
         /// </summary>
-        public String Name
+        public string Name
         {
             get
             {
@@ -129,10 +129,10 @@ namespace AndroidLib.Adb
         /// <param name="allowDowngrade">Allow version code downgrade</param>
         /// <param name="grantAllPermissions">Grant all runtime permissions</param>
         /// <returns>An object containing the information about the installation process</returns>
-        public AdbInstallResult InstallApk(String apkPath, Boolean forwardLock, Boolean replaceExisting, Boolean allowTest, Boolean installOnSd, Boolean allowDowngrade, Boolean grantAllPermissions)
+        public AdbInstallResult InstallApk(string apkPath, Boolean forwardLock, Boolean replaceExisting, Boolean allowTest, Boolean installOnSd, Boolean allowDowngrade, Boolean grantAllPermissions)
         {
             //Initialize empty string
-            String command = "install ";
+            string command = "install ";
 
             //Now form it
             if (forwardLock) command += "-l ";
@@ -143,7 +143,7 @@ namespace AndroidLib.Adb
             if (grantAllPermissions) command += "-g ";
             command += "\"" + apkPath + "\"";
 
-            String output = Adb.ExecuteAdbCommandWithOutput(command, this);
+            string output = Adb.ExecuteAdbCommandWithOutput(command, this);
 
             //Return it
             return new AdbInstallResult(output.Contains("Success"), output);
@@ -155,20 +155,20 @@ namespace AndroidLib.Adb
         /// <param name="pathOnDevice">The path of the file or directory on the device</param>
         /// <param name="pathOnComputer">The target path (like 'C:\Android')</param>
         /// <returns>The AdbPushPullResult containing the infos about the transfer</returns>
-        public AdbPushPullResult Pull(String pathOnDevice, String pathOnComputer)
+        public AdbPushPullResult Pull(string pathOnDevice, string pathOnComputer)
         {
             //Do it and get its output for further analysis
-            String output = Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this);
+            string output = Adb.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this);
 
             //Split it into the lines
-            String[] lines = output.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = output.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             //Store values for creation of the result
             int transferrate = 0;
             Boolean success = false, singlefile = true;
             long size = 0L;
             Double secondsneeded = 0.0;
-            Dictionary<String, String> files = new Dictionary<String, String>();
+            Dictionary<string, string> files = new Dictionary<string, string>();
             ErrorType error = ErrorType.None;
 
             //Check whether it was successful and if not abort it
@@ -201,8 +201,8 @@ namespace AndroidLib.Adb
                 {
                     if (!lines[i].StartsWith("pull:")) continue;
 
-                    String tmpLine = lines[i].After("pull:");
-                    String[] tmpSplit = tmpLine.Split(new String[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
+                    string tmpLine = lines[i].After("pull:");
+                    string[] tmpSplit = tmpLine.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
 
                     files.Add(tmpSplit[0].Trim(), tmpSplit[1].Trim());
                 }
@@ -213,7 +213,7 @@ namespace AndroidLib.Adb
             }
 
             //Parse last line
-            String lastLine = lines[lines.Length - 1];
+            string lastLine = lines[lines.Length - 1];
             transferrate = int.Parse(lastLine.Before(" "));
             size = long.Parse(lastLine.Between(" (", " bytes"));
             secondsneeded = Double.Parse(lastLine.Between("bytes in ", "s"), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
@@ -228,20 +228,20 @@ namespace AndroidLib.Adb
         /// <param name="pathOnComputer">The path of the file or directory on the computer</param>
         /// <param name="pathOnDevice">The target path</param>
         /// <returns>The AdbPushPullResult containing the infos about the transfer</returns>
-        public AdbPushPullResult Push(String pathOnComputer, String pathOnDevice)
+        public AdbPushPullResult Push(string pathOnComputer, string pathOnDevice)
         {
             //Do it and get its output for further analysis
-            String output = Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
+            string output = Adb.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
 
             //Split it into the lines
-            String[] lines = output.Split(new String[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = output.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             //Store values for creation of the result
             int transferrate = 0;
             Boolean success = false, singlefile = true;
             long size = 0L;
             Double secondsneeded = 0.0;
-            Dictionary<String, String> files = new Dictionary<String, String>();
+            Dictionary<string, string> files = new Dictionary<string, string>();
             ErrorType error = ErrorType.None;
 
             //Check whether it was successful and if not abort it
@@ -274,8 +274,8 @@ namespace AndroidLib.Adb
                 {
                     if (!lines[i].StartsWith("push:")) continue;
 
-                    String tmpLine = lines[i].After("push:");
-                    String[] tmpSplit = tmpLine.Split(new String[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
+                    string tmpLine = lines[i].After("push:");
+                    string[] tmpSplit = tmpLine.Split(new string[] { "->" }, StringSplitOptions.RemoveEmptyEntries);
 
                     files.Add(tmpSplit[0].Trim(), tmpSplit[1].Trim());
                 }
@@ -286,7 +286,7 @@ namespace AndroidLib.Adb
             }
 
             //Parse last line
-            String lastLine = lines[lines.Length - 1];
+            string lastLine = lines[lines.Length - 1];
             transferrate = int.Parse(lastLine.Before(" "));
             size = long.Parse(lastLine.Between(" (", " bytes"));
             secondsneeded = Double.Parse(lastLine.Between("bytes in ", "s"), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
