@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Adb\Adb.cs" />
+    <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Results\AdbInstallResult.cs" />
     <Compile Include="Classes\Results\AdbPushPullResult.cs" />
     <Compile Include="Classes\Adb\Device.cs" />

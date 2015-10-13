@@ -181,10 +181,4 @@ namespace AndroidLib.Adb
 
         #endregion
     }
-
-    public enum AdbMountType
-    {
-        Root,
-        NonRoot
-    }
 }

@@ -297,17 +297,4 @@ namespace AndroidLib.Adb
 
         #endregion
     }
-
-    #region State of devices
-
-    public enum DeviceState
-    {
-        Unknown,
-        Online,
-        Offline,
-        Bootloader,
-        Unauthorized
-    }
-
-    #endregion
 }

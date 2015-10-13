@@ -117,12 +117,4 @@ namespace AndroidLib.Results
             }
         }
     }
-
-    public enum ErrorType
-    {
-        RemoteObjectNotFound,
-        NoSuchFileOrDirectory,
-        Unknown,
-        None
-    }
 }
