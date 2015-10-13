@@ -145,6 +145,7 @@ namespace AndroidLib.Adb
 
             String output = Adb.ExecuteAdbCommandWithOutput(command, this);
 
+            //Return it
             return new AdbInstallResult(output.Contains("Success"), output);
         }
 
