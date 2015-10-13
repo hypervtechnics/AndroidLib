@@ -29,4 +29,11 @@
         Bootloader,
         Recovery
     }
+
+    public enum InstallLocationType
+    {
+        Auto = 0,
+        Internal = 1,
+        External = 2
+    }
 }

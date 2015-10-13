@@ -40,15 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Adb\Adb.cs" />
+    <Compile Include="Classes\Base\Adb.cs" />
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Results\AdbInstallResult.cs" />
     <Compile Include="Classes\Results\AdbPushPullResult.cs" />
-    <Compile Include="Classes\Adb\Device.cs" />
+    <Compile Include="Classes\Base\Device.cs" />
     <Compile Include="Classes\ResourceManager.cs" />
     <Compile Include="Classes\Utils\Array.cs" />
     <Compile Include="Classes\Utils\Command.cs" />
     <Compile Include="Classes\Utils\Java.cs" />
+    <Compile Include="Classes\Wrapper\PackageManager\Package.cs" />
+    <Compile Include="Classes\Wrapper\PackageManager\PackageManager.cs" />
     <Compile Include="Internal Classes\ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -59,9 +61,7 @@
     <Content Include="External\ADB\Note.txt" />
     <Content Include="Notes\AdbPull.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\Wrapper\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

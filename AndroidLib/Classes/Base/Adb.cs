@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using AndroidLib.Utils;
 
-namespace AndroidLib.Adb
+namespace AndroidLib.Base
 {
-    public class Adb
+    public class ADB
     {
-        #region Public Fields
-
         /// <summary>
         /// Returns the status of the adb status
         /// </summary>
@@ -18,10 +16,6 @@ namespace AndroidLib.Adb
                 return Command.IsProcessRunning("adb");
             }
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Remounts the adb with the given type
@@ -75,9 +69,8 @@ namespace AndroidLib.Adb
         /// <summary>
         /// Gets a list of connected devices
         /// </summary>
-        /// <param name="updateThemDirectly">Call the update method of the devices directly</param>
         /// <returns>List of devices</returns>
-        public static List<Device> GetConnectedDevices(Boolean updateThemDirectly = false)
+        public static List<Device> GetConnectedDevices()
         {
             //Instance the output
             List<Device> devices = new List<Device>();
@@ -142,7 +135,6 @@ namespace AndroidLib.Adb
 
                 //Create, update if requested and add it to result
                 Device dev = new Device(serialNo, model, productname, name, state);
-                if (updateThemDirectly) dev.updateInfo();
 
                 devices.Add(dev);
             }
@@ -178,7 +170,5 @@ namespace AndroidLib.Adb
         {
             string output = ExecuteAdbCommandWithOutput("wait-for-device");
         }
-
-        #endregion
     }
 }

@@ -1,8 +1,7 @@
-﻿using AndroidLib.Adb;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using AndroidLib.Wrapper;
 using AndroidLib.Results;
+using AndroidLib.Base;
 
 namespace LibTester
 {
@@ -18,7 +17,7 @@ namespace LibTester
             //Adb.StopServer();
             //Console.WriteLine("Stopped!");
 
-            List<Device> devices = Adb.GetConnectedDevices();
+            List<Device> devices = ADB.GetConnectedDevices();
 
             Console.WriteLine(devices.Count);
 
@@ -36,7 +35,7 @@ namespace LibTester
 
             Console.ReadLine();
 
-            Adb.StopServer();
+            ADB.StopServer();
         }
     }
 }
