@@ -21,7 +21,7 @@ namespace AndroidLib.Base
 
             mProcess = new Process();
             mProcess.StartInfo.FileName = ResourceManager.adbPrefix;
-            mProcess.StartInfo.Arguments = "shell";
+            mProcess.StartInfo.Arguments = " -s " + mDevice.SerialNumber + " shell";
             mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             mProcess.StartInfo.CreateNoWindow = true;
             mProcess.StartInfo.UseShellExecute = false;
