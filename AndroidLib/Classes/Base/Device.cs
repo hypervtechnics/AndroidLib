@@ -279,7 +279,7 @@ namespace AndroidLib.Base
         public void RebootInto(RebootMode mode)
         {
             //Decide which mode to use and set a standard mode
-            String cmd = "reboot";
+            string cmd = "reboot";
 
             if (mode == RebootMode.Bootloader) cmd += " bootloader";
             else if (mode == RebootMode.Recovery) cmd += " recovery";

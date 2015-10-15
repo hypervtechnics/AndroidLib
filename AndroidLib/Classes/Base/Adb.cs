@@ -95,7 +95,7 @@ namespace AndroidLib.Base
                 //Split the device line ("XXXXXXXXXXXXXXXX       XXXXXX product:XXXX model:XXXX device:XXXX")
                 string[] parts = deviceLines[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-                string serialNo, model, productname, name;
+                string serialNo = "", model = "", productname = "", name = "";
                 DeviceState state;
 
                 //Get serial no
@@ -124,14 +124,18 @@ namespace AndroidLib.Base
                         break;
                 }
 
-                //Detect product
-                productname = parts[2].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+                //Avoid OutOfRange
+                if (state == DeviceState.Online || state == DeviceState.Bootloader)
+                {
+                    //Detect product
+                    productname = parts[2].Split(new string[] { ":" }, StringSplitOptions.None)[1];
 
-                //Detect model
-                model = parts[3].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+                    //Detect model
+                    model = parts[3].Split(new string[] { ":" }, StringSplitOptions.None)[1];
 
-                //Detect name
-                name = parts[4].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+                    //Detect name
+                    name = parts[4].Split(new string[] { ":" }, StringSplitOptions.None)[1];
+                }
 
                 //Create, update if requested and add it to result
                 Device dev = new Device(serialNo, model, productname, name, state);
