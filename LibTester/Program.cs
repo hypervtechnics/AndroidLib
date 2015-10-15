@@ -21,17 +21,27 @@ namespace LibTester
 
             Console.WriteLine(devices.Count);
 
-            Console.Read();
+            Shell shell = devices[0].CommandShell;
 
-            Device dev = devices[0];
+            Console.WriteLine(devices[0].SerialNumber);
 
-            Console.Read();
+            Console.ReadLine();
 
-            Console.WriteLine(dev.SerialNumber);
+            Console.WriteLine("------------------------");
 
-            AdbPushPullResult result = dev.Push(@"C:\Android\WA", "/sdcard/TESTER");
+            Boolean exit = false;
 
-            Console.WriteLine(result.Files.Count);
+            while(!exit)
+            {
+                string input = Console.ReadLine();
+                if (input == "ExIt") exit = true;
+                List<string> o = shell.RunCommand(input);
+                Console.WriteLine(o.ToString());
+            }
+
+            Console.WriteLine("------------------------");
+
+            Console.WriteLine("Press any key to exit...");
 
             Console.ReadLine();
 
