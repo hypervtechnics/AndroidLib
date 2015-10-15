@@ -9,12 +9,12 @@ namespace AndroidLib.Wrapper
     public class Package
     {
         private Boolean mIsSystemApp;
-        private String mName;
-        private String mPackageName;
-        private String mAssociatedFile;
+        private string mName;
+        private string mPackageName;
+        private string mAssociatedFile;
         private Boolean mEnabled;
 
-        public Package(Boolean issystemapp, String name, String packagename, String associatedfile, Boolean enabled)
+        public Package(Boolean issystemapp, string name, string packagename, string associatedfile, Boolean enabled)
         {
             this.mIsSystemApp = issystemapp;
             this.mName = name;
@@ -37,7 +37,7 @@ namespace AndroidLib.Wrapper
         /// <summary>
         /// Returns the name of the app
         /// </summary>
-        public String Name
+        public string Name
         {
             get
             {
@@ -48,7 +48,7 @@ namespace AndroidLib.Wrapper
         /// <summary>
         /// Returns the package name of the app
         /// </summary>
-        public String PackageName
+        public string PackageName
         {
             get
             {
@@ -59,7 +59,7 @@ namespace AndroidLib.Wrapper
         /// <summary>
         /// Returns the path to the apk file on the phone
         /// </summary>
-        public String AssociatedFile
+        public string AssociatedFile
         {
             get
             {
