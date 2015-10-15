@@ -108,6 +108,17 @@ namespace AndroidLib.Base
         }
 
         /// <summary>
+        /// Returns a shell instance from this device
+        /// </summary>
+        public Shell CommandShell
+        {
+            get
+            {
+                return new Shell(this);
+            }
+        }
+
+        /// <summary>
         /// Pulls the file or directory from the device
         /// </summary>
         /// <param name="pathOnDevice">The path of the file or directory on the device</param>
@@ -252,7 +263,6 @@ namespace AndroidLib.Base
             //Finally return the object
             return new AdbPushPullResult(transferrate, success, singlefile, size, files, secondsneeded, output, error);
         }
-
 
         /// <summary>
         /// Remounts the /system, /vendor (if present) and /oem (if present) partitions on the device read-write.
