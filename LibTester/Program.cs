@@ -35,12 +35,12 @@ namespace LibTester
             {
                 string input = Console.ReadLine();
                 if (input == "ExIt") exit = true;
-                List<string> o = shell.RunCommand(input);
+                string o = shell.Exec(input);
                 Console.WriteLine(o.ToString());
             }
 
             Console.WriteLine("------------------------");
-
+            
             Console.WriteLine("Press any key to exit...");
 
             Console.ReadLine();
