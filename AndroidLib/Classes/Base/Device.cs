@@ -91,8 +91,8 @@ namespace AndroidLib.Base
         {
             get
             {
-                //TODO
-                return false;
+                string output = CommandShell.Exec("whoami", true);
+                return output.Contains("unknown uid 0") || output.Contains("root");
             }
         }
 

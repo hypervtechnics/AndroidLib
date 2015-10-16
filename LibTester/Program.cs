@@ -19,11 +19,13 @@ namespace LibTester
 
             List<Device> devices = ADB.GetConnectedDevices();
 
-            Console.WriteLine(devices.Count);
+            Console.WriteLine("Devices connected: " + devices.Count);
 
             Shell shell = devices[0].CommandShell;
 
             Console.WriteLine(devices[0].SerialNumber);
+
+            Console.Write("Root: " + devices[0].HasRoot);
 
             Console.ReadLine();
 
