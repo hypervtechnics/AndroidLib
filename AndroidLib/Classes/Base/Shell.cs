@@ -23,11 +23,11 @@ namespace AndroidLib.Base
         /// <param name="command">The command to execute</param>
         /// <param name="runAsRoot">If superuser privilegs are required</param>
         /// <returns>The output of the shell command</returns>
-        public string Exec(string command, Boolean runAsRoot = false)
+        public string Exec(string command, Boolean execAsRoot = false)
         {
             //Form command
             string cmd = "shell ";
-            if (runAsRoot) cmd += "su -c ";
+            if (execAsRoot) cmd += "su -c ";
             cmd += command;
 
             //Execute and return output
