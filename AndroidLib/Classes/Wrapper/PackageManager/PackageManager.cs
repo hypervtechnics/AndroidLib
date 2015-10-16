@@ -41,7 +41,11 @@ namespace AndroidLib.Wrapper
             }
             set
             {
-                //TODO
+                //Only possible if device has root
+                if(mDevice.HasRoot)
+                {
+                    mDevice.CommandShell.Exec("pm set-install-location " + value, true);
+                }
             }
         }
 
