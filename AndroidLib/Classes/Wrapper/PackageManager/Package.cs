@@ -9,18 +9,14 @@ namespace AndroidLib.Wrapper
     public class Package
     {
         private Boolean mIsSystemApp;
-        private string mName;
         private string mPackageName;
         private string mAssociatedFile;
-        private Boolean mEnabled;
 
-        public Package(Boolean issystemapp, string name, string packagename, string associatedfile, Boolean enabled)
+        public Package(Boolean issystemapp, string packagename, string associatedfile)
         {
             this.mIsSystemApp = issystemapp;
-            this.mName = name;
             this.mPackageName = packagename;
             this.mAssociatedFile = associatedfile;
-            this.mEnabled = enabled;
         }
 
         /// <summary>
@@ -31,17 +27,6 @@ namespace AndroidLib.Wrapper
             get
             {
                 return mIsSystemApp;
-            }
-        }
-        
-        /// <summary>
-        /// Returns the name of the app
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return mName;
             }
         }
 
@@ -64,17 +49,6 @@ namespace AndroidLib.Wrapper
             get
             {
                 return mAssociatedFile;
-            }
-        }
-
-        /// <summary>
-        /// Indicates whether the app is currently enabled or not
-        /// </summary>
-        public Boolean Enabled
-        {
-            get
-            {
-                return mEnabled;
             }
         }
     }

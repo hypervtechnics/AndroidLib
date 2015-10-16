@@ -50,6 +50,25 @@ namespace AndroidLib.Wrapper
         }
 
         /// <summary>
+        /// Check if application is installed
+        /// </summary>
+        /// <param name="packageName">The package name to be checked</param>
+        /// <returns></returns>
+        public Boolean IsInstalled(String packageName)
+        {
+            return ADB.ExecuteAdbCommandWithOutput("pm list packages " + packageName, mDevice).Contains(packageName);
+        }
+
+        /// <summary>
+        /// Clears caches until reached desired space
+        /// </summary>
+        /// <param name="desiredSpace">Space which try to get free</param>
+        public void ClearCaches(int desiredSpace)
+        {
+            mDevice.CommandShell.Exec("pm trim-caches " + desiredSpace);
+        }
+
+        /// <summary>
         /// This methods refreshes all values
         /// </summary>
         public void Update()
@@ -61,6 +80,54 @@ namespace AndroidLib.Wrapper
                 if (output.Contains("0")) mInstallLocation = InstallLocationType.Auto;
                 else if (output.Contains("1")) mInstallLocation = InstallLocationType.Internal;
                 else if (output.Contains("2")) mInstallLocation = InstallLocationType.External;
+            }
+
+            //Get all packages
+            {
+                //Clear them first
+                mPackages.Clear();
+
+                //First all third party packages
+                {
+                    //Get output
+                    String output = mDevice.CommandShell.Exec("pm list packages -3 -f");
+
+                    //Get lines
+                    String[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    //Loop through lines
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        if (!lines[i].Contains("package:")) continue;
+
+                        //Get text behind ":"
+                        String tempLine = lines[i].After(":");
+
+                        //Now split at the "=" and create object from it
+                        mPackages.Add(new Package(false, tempLine.After("="), tempLine.Before("=")));
+                    }
+                }
+
+                //Then all system apps
+                {
+                    //Get output
+                    String output = mDevice.CommandShell.Exec("pm list packages -s -f");
+
+                    //Get lines
+                    String[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    //Loop through lines
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        if (!lines[i].Contains("package:")) continue;
+
+                        //Get text behind ":"
+                        String tempLine = lines[i].After(":");
+
+                        //Now split at the "=" and create object from it
+                        mPackages.Add(new Package(false, tempLine.After("="), tempLine.Before("=")));
+                    }
+                }
             }
         }
 
