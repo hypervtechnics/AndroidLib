@@ -54,7 +54,14 @@ namespace AndroidLib.Wrapper
         /// </summary>
         public void Update()
         {
-            //TODO
+            //Update install location
+            { 
+                String output = mDevice.CommandShell.Exec("pm get-install-location");
+
+                if (output.Contains("0")) mInstallLocation = InstallLocationType.Auto;
+                else if (output.Contains("1")) mInstallLocation = InstallLocationType.Internal;
+                else if (output.Contains("2")) mInstallLocation = InstallLocationType.External;
+            }
         }
 
         /// <summary>
