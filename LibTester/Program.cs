@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AndroidLib.Results;
+using AndroidLib.Wrapper;
 using AndroidLib.Base;
 
 namespace LibTester
@@ -38,12 +38,18 @@ namespace LibTester
             while(!exit)
             {
                 string input = Console.ReadLine();
-                if (input == "ExIt") exit = true;
+                if (input == "ex") exit = true;
                 string o = shell.Exec(input);
                 Console.WriteLine(o.ToString());
             }
 
-            Console.WriteLine("------------------------");
+            Console.Write("------------------------");
+
+            Console.ReadLine();
+
+            PackageManager packages = devices[0].ApplicationManager;
+
+            Console.WriteLine("Apps installed: " + packages.Packages.Count);
             
             Console.WriteLine("Press any key to exit...");
 
