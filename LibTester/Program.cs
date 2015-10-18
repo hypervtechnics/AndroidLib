@@ -33,7 +33,7 @@ namespace LibTester
 
             Console.WriteLine("------------------------");
 
-            Boolean exit = false;
+            bool exit = false;
 
             while(!exit)
             {

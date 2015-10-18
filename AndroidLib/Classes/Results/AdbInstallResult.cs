@@ -4,10 +4,10 @@ namespace AndroidLib.Results
 {
     public class AdbInstallResult
     {
-        private Boolean mSuccess;
+        private bool mSuccess;
         private string mOutput;
 
-        public AdbInstallResult(Boolean success, string output)
+        public AdbInstallResult(bool success, string output)
         {
             this.mSuccess = success;
             this.mOutput = output;
@@ -16,7 +16,7 @@ namespace AndroidLib.Results
         /// <summary>
         /// Indicates whether the installation was successful or not
         /// </summary>
-        public Boolean Success
+        public bool Success
         {
             get
             {

@@ -54,7 +54,7 @@ namespace AndroidLib.Wrapper
         /// </summary>
         /// <param name="packageName">The package name to be checked</param>
         /// <returns></returns>
-        public Boolean IsInstalled(String packageName)
+        public bool IsInstalled(string packageName)
         {
             return ADB.ExecuteAdbCommandWithOutput("pm list packages " + packageName, mDevice).Contains(packageName);
         }
@@ -74,8 +74,8 @@ namespace AndroidLib.Wrapper
         public void Update()
         {
             //Update install location
-            { 
-                String output = mDevice.CommandShell.Exec("pm get-install-location");
+            {
+                string output = mDevice.CommandShell.Exec("pm get-install-location");
 
                 if (output.Contains("0")) mInstallLocation = InstallLocationType.Auto;
                 else if (output.Contains("1")) mInstallLocation = InstallLocationType.Internal;
@@ -90,10 +90,10 @@ namespace AndroidLib.Wrapper
                 //First all third party packages
                 {
                     //Get output
-                    String output = mDevice.CommandShell.Exec("pm list packages -3 -f");
+                    string output = mDevice.CommandShell.Exec("pm list packages -3 -f");
 
                     //Get lines
-                    String[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                     //Loop through lines
                     for (int i = 0; i < lines.Length; i++)
@@ -101,7 +101,7 @@ namespace AndroidLib.Wrapper
                         if (!lines[i].Contains("package:")) continue;
 
                         //Get text behind ":"
-                        String tempLine = lines[i].After(":");
+                        string tempLine = lines[i].After(":");
 
                         //Now split at the "=" and create object from it
                         mPackages.Add(new Package(false, tempLine.After("="), tempLine.Before("=")));
@@ -111,10 +111,10 @@ namespace AndroidLib.Wrapper
                 //Then all system apps
                 {
                     //Get output
-                    String output = mDevice.CommandShell.Exec("pm list packages -s -f");
+                    string output = mDevice.CommandShell.Exec("pm list packages -s -f");
 
                     //Get lines
-                    String[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                     //Loop through lines
                     for (int i = 0; i < lines.Length; i++)
@@ -122,7 +122,7 @@ namespace AndroidLib.Wrapper
                         if (!lines[i].Contains("package:")) continue;
 
                         //Get text behind ":"
-                        String tempLine = lines[i].After(":");
+                        string tempLine = lines[i].After(":");
 
                         //Now split at the "=" and create object from it
                         mPackages.Add(new Package(true, tempLine.After("="), tempLine.Before("=")));
@@ -142,7 +142,7 @@ namespace AndroidLib.Wrapper
         /// <param name="allowDowngrade">Allow version code downgrade</param>
         /// <param name="grantAllPermissions">Grant all runtime permissions</param>
         /// <returns>An object containing the information about the installation process</returns>
-        public AdbInstallResult InstallApk(string apkPath, Boolean forwardLock, Boolean replaceExisting, Boolean allowTest, Boolean installOnSd, Boolean allowDowngrade, Boolean grantAllPermissions)
+        public AdbInstallResult InstallApk(string apkPath, bool forwardLock, bool replaceExisting, bool allowTest, bool installOnSd, bool allowDowngrade, bool grantAllPermissions)
         {
             //Initialize empty string
             string command = "install ";
@@ -168,7 +168,7 @@ namespace AndroidLib.Wrapper
         /// <param name="packageName">The package name of the application</param>
         /// <param name="keepData">If the data in /data/data/<pkgname>/ should be kept</param>
         /// <returns>If the uninstalling of the package was successful</returns>
-        public Boolean UninstallApp(string packageName, Boolean keepData = false)
+        public bool UninstallApp(string packageName, bool keepData = false)
         {
             string command = "";
 

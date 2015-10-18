@@ -8,11 +8,11 @@ namespace AndroidLib.Wrapper
 {
     public class Package
     {
-        private Boolean mIsSystemApp;
+        private bool mIsSystemApp;
         private string mPackageName;
         private string mAssociatedFile;
 
-        public Package(Boolean issystemapp, string packagename, string associatedfile)
+        public Package(bool issystemapp, string packagename, string associatedfile)
         {
             this.mIsSystemApp = issystemapp;
             this.mPackageName = packagename;
@@ -22,7 +22,7 @@ namespace AndroidLib.Wrapper
         /// <summary>
         /// Indicates whether the app is a system app
         /// </summary>
-        public Boolean IsSystemApp
+        public bool IsSystemApp
         {
             get
             {

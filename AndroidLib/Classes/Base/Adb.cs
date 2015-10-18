@@ -9,7 +9,7 @@ namespace AndroidLib.Base
         /// <summary>
         /// Returns the status of the adb status
         /// </summary>
-        public static Boolean IsServerRunning
+        public static bool IsServerRunning
         {
             get
             {
@@ -152,7 +152,7 @@ namespace AndroidLib.Base
         /// </summary>
         /// <param name="serialNo">The serial number of the device</param>
         /// <returns>Whether the device is connected</returns>
-        public static Boolean IsDeviceConnected(string serialNo)
+        public static bool IsDeviceConnected(string serialNo)
         {
             //Get list of connected devices and check whether one of them has the given serial number
             List<Device> connectedDevices = GetConnectedDevices();

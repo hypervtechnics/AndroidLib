@@ -87,7 +87,7 @@ namespace AndroidLib.Base
         /// <summary>
         /// Indicates whether the device is rooted or not
         /// </summary>
-        public Boolean HasRoot
+        public bool HasRoot
         {
             get
             {
@@ -119,6 +119,17 @@ namespace AndroidLib.Base
         }
 
         /// <summary>
+        /// Returns an BackupRestore instance to manage backup and restore of files
+        /// </summary>
+        public BackupRestoreManager BackupRecover
+        {
+            get
+            {
+                return new BackupRestoreManager(this);
+            }
+        }
+
+        /// <summary>
         /// Pulls the file or directory from the device
         /// </summary>
         /// <param name="pathOnDevice">The path of the file or directory on the device</param>
@@ -134,7 +145,7 @@ namespace AndroidLib.Base
 
             //Store values for creation of the result
             int transferrate = 0;
-            Boolean success = false, singlefile = true;
+            bool success = false, singlefile = true;
             long size = 0L;
             Double secondsneeded = 0.0;
             Dictionary<string, string> files = new Dictionary<string, string>();
@@ -207,7 +218,7 @@ namespace AndroidLib.Base
 
             //Store values for creation of the result
             int transferrate = 0;
-            Boolean success = false, singlefile = true;
+            bool success = false, singlefile = true;
             long size = 0L;
             Double secondsneeded = 0.0;
             Dictionary<string, string> files = new Dictionary<string, string>();

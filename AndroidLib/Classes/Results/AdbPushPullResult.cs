@@ -6,15 +6,15 @@ namespace AndroidLib.Results
     public class AdbPushPullResult
     {
         private int mTransferRate;
-        private Boolean mSuccess;
-        private Boolean mSingleFile;
+        private bool mSuccess;
+        private bool mSingleFile;
         private long mFileSize;
         private Dictionary<string, string> mFiles;
         private Double mSecondsNeeded;
         private string mOutput;
         private ErrorType mError;
 
-        public AdbPushPullResult(int transferrate, Boolean success, Boolean singlefile, long filesize, Dictionary<string, string> files, Double secondsneeded, string output, ErrorType error)
+        public AdbPushPullResult(int transferrate, bool success, bool singlefile, long filesize, Dictionary<string, string> files, Double secondsneeded, string output, ErrorType error)
         {
             this.mTransferRate = transferrate;
             this.mSuccess = success;
@@ -40,7 +40,7 @@ namespace AndroidLib.Results
         /// <summary>
         /// Indicates whether the command was executed successfully
         /// </summary>
-        public Boolean Success
+        public bool Success
         {
             get
             {
@@ -51,7 +51,7 @@ namespace AndroidLib.Results
         /// <summary>
         /// Indicates whether it was required to build a file list or not
         /// </summary>
-        public Boolean SingleFile
+        public bool SingleFile
         {
             get
             {
