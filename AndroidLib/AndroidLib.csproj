@@ -50,6 +50,9 @@
     <Compile Include="Classes\Utils\Array.cs" />
     <Compile Include="Classes\Utils\Command.cs" />
     <Compile Include="Classes\Utils\Java.cs" />
+    <Compile Include="Classes\Wrapper\BackupRestore\Backup.cs" />
+    <Compile Include="Classes\Wrapper\BackupRestore\BackupRestoreManager.cs" />
+    <Compile Include="Classes\Wrapper\BackupRestore\Restore.cs" />
     <Compile Include="Classes\Wrapper\PackageManager\Package.cs" />
     <Compile Include="Classes\Wrapper\PackageManager\PackageManager.cs" />
     <Compile Include="Internal Classes\ExtensionMethods.cs" />
