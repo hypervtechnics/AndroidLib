@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AndroidLib.Wrapper
@@ -56,7 +57,21 @@ namespace AndroidLib.Wrapper
             }
 
             //Create object and block if neccessary
-            return new Backup(command, mDevice, filename);
+            Backup backup = new Backup(command, mDevice, filename);
+
+            if(!asyncProcess)
+            {
+
+                EventWaitHandle waiter = new ManualResetEvent(false);
+                backup.OnBackupCompleted += ((object sender, Backup.OnBackupCompletedArgs Eventargs) => waiter.Set());
+                backup.Start();
+                waiter.WaitOne();
+                backup.Dispose();
+                return backup;
+            }else
+            {
+                return backup;
+            }
         }
     }
 }
