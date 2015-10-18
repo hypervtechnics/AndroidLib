@@ -59,6 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="External\ABE\abe.jar" />
     <Content Include="External\ADB\adb.exe" />
     <Content Include="External\ADB\AdbWinApi.dll" />
     <Content Include="External\ADB\AdbWinUsbApi.dll" />
