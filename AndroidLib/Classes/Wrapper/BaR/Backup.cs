@@ -1,12 +1,8 @@
 ﻿using AndroidLib.Base;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AndroidLib.Wrapper
 {
@@ -17,6 +13,7 @@ namespace AndroidLib.Wrapper
         private Process mProcess;
         private Thread mThread;
         private string mFilename;
+        private Boolean mIsRunning;
 
         public event EventHandler<OnBackupCompletedArgs> OnBackupCompleted;
         public event EventHandler<OnBackupProgressChangedArgs> OnBackupProgressChanged;
@@ -47,11 +44,19 @@ namespace AndroidLib.Wrapper
             }
         }
 
+        public Boolean IsRunning
+        {
+            get
+            {
+                return mIsRunning;
+            }
+        }
+
         internal Backup(string command, Device device, string filename)
         {
             mProcess = new Process();
             mProcess.StartInfo.FileName = ResourceManager.adbPrefix;
-            mProcess.StartInfo.Arguments = "-s " + device.SerialNumber + " " + command;
+            mProcess.StartInfo.Arguments = " -s " + device.SerialNumber + " " + command;
             mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             mProcess.StartInfo.CreateNoWindow = true;
             mProcess.StartInfo.UseShellExecute = false;
@@ -60,44 +65,56 @@ namespace AndroidLib.Wrapper
             mLastSize = 0L;
             mDevice = device;
             mFilename = filename;
+            mIsRunning = false;
 
-            mThread = new Thread(() =>
+            //mThread = new Thread(watchBackupProgress);
+            //mThread.IsBackground = true;
+
+            //mThread.Name = "Android Backup Watcher Thread";
+        }
+
+        private void watchBackupProgress()
+        {
+            mIsRunning = true;
+            bool waitingAlreadyRaised = false;
+
+            while (!mProcess.HasExited)
             {
-                bool waitingAlreadyRaised = false;
+                FileInfo file = new FileInfo(mFilename);
 
-                while(!mProcess.HasExited)
+                if (file.Exists)
                 {
-                    FileInfo file = new FileInfo(mFilename);
+                    long currentSize = file.Length;
 
-                    if(file.Exists)
+                    if (currentSize == 0L && !waitingAlreadyRaised)
                     {
-                        long currentSize = file.Length;
-
-                        if(currentSize == 0L && !waitingAlreadyRaised)
-                        {
-                            waitingAlreadyRaised = true;
-                            if (OnBackupProgressChanged != null) OnBackupProgressChanged(this, new OnBackupProgressChangedArgs(true, mLastSize));
-                        }
-
-                        if(currentSize > mLastSize)
-                        {
-                            if (OnBackupProgressChanged != null) OnBackupProgressChanged(this, new OnBackupProgressChangedArgs(false, mLastSize));
-                        }
-
-                        mLastSize = currentSize;
+                        waitingAlreadyRaised = true;
+                        if (OnBackupProgressChanged != null) OnBackupProgressChanged(this, new OnBackupProgressChangedArgs(true, mLastSize));
                     }
 
-                    Thread.Sleep(3000);
+                    if (currentSize > mLastSize)
+                    {
+                        if (OnBackupProgressChanged != null) OnBackupProgressChanged(this, new OnBackupProgressChangedArgs(false, mLastSize));
+                    }
+
+                    mLastSize = currentSize;
                 }
 
-                if (OnBackupCompleted != null) OnBackupCompleted(this, new OnBackupCompletedArgs(mProcess.ExitTime - mProcess.StartTime, new FileInfo(mFilename).Length, mProcess.StandardOutput.ReadToEnd()));
-            })
-            { IsBackground = true };
+                Thread.Sleep(3000);
+            }
+
+            mIsRunning = false;
+            if (OnBackupCompleted != null) OnBackupCompleted(this, new OnBackupCompletedArgs(mProcess.ExitTime - mProcess.StartTime, new FileInfo(mFilename).Exists ? new FileInfo(mFilename).Length : 0L, mProcess.StandardOutput.ReadToEnd()));
         }
 
         public void Start()
         {
             mProcess.Start();
+
+            mThread = new Thread(watchBackupProgress);
+            mThread.IsBackground = true;
+
+            mThread.Name = "Android Backup Watcher Thread";
             mThread.Start();
         }
 
@@ -105,6 +122,7 @@ namespace AndroidLib.Wrapper
         {
             mThread.Abort();
             mThread = null;
+            mIsRunning = false;
 
             if (!mProcess.HasExited)
             {

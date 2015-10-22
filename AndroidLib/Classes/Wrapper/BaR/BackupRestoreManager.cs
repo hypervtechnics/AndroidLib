@@ -29,7 +29,7 @@ namespace AndroidLib.Wrapper
         /// <param name="asyncProcess">Whether to block thread until backup is completed</param>
         /// <param name="packages">Optionally the list of packages to backup (Note: backupAll has to be false)</param>
         /// <returns>An object handling the Backup process</returns>
-        public Backup MakeBackup(string filename, bool includeApk, bool includeObb, bool includeInternal, bool backupAll, bool includeSystemApps, bool asyncProcess, List<string> packages = null)
+        public Backup PrepareBackup(string filename, bool includeApk, bool includeObb, bool includeInternal, bool backupAll, bool includeSystemApps, bool asyncProcess, List<string> packages = null)
         {
             //Build cmd string
             string command = "backup -f \"" + filename + "\" ";
@@ -61,7 +61,6 @@ namespace AndroidLib.Wrapper
 
             if(!asyncProcess)
             {
-
                 EventWaitHandle waiter = new ManualResetEvent(false);
                 backup.OnBackupCompleted += ((object sender, Backup.OnBackupCompletedArgs Eventargs) => waiter.Set());
                 backup.Start();
