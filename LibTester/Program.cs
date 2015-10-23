@@ -26,7 +26,7 @@ namespace LibTester
 
             Console.WriteLine("Serial number: " + devices[0].SerialNumber);
 
-            Console.WriteLine("Install location: " + devices[0].ApplicationManager.InstallLocation.ToString());
+            //Console.WriteLine("Install location: " + devices[0].ApplicationManager.InstallLocation.ToString());
 
             Console.WriteLine("Root: " + devices[0].HasRoot);
             

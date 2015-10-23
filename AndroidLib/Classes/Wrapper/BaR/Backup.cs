@@ -56,7 +56,7 @@ namespace AndroidLib.Wrapper
         {
             mProcess = new Process();
             mProcess.StartInfo.FileName = ResourceManager.adbPrefix;
-            mProcess.StartInfo.Arguments = " -s " + device.SerialNumber + " " + command;
+            mProcess.StartInfo.Arguments = "-s " + device.SerialNumber + " " + command;
             mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             mProcess.StartInfo.CreateNoWindow = true;
             mProcess.StartInfo.UseShellExecute = false;
@@ -67,10 +67,10 @@ namespace AndroidLib.Wrapper
             mFilename = filename;
             mIsRunning = false;
 
-            //mThread = new Thread(watchBackupProgress);
-            //mThread.IsBackground = true;
+            mThread = new Thread(watchBackupProgress);
+            mThread.IsBackground = true;
 
-            //mThread.Name = "Android Backup Watcher Thread";
+            mThread.Name = "Android Backup Watcher Thread";
         }
 
         private void watchBackupProgress()
@@ -110,11 +110,6 @@ namespace AndroidLib.Wrapper
         public void Start()
         {
             mProcess.Start();
-
-            mThread = new Thread(watchBackupProgress);
-            mThread.IsBackground = true;
-
-            mThread.Name = "Android Backup Watcher Thread";
             mThread.Start();
         }
 
