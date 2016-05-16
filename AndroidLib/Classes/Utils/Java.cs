@@ -82,7 +82,7 @@ namespace AndroidLib.Utils
         }
 
         /// <summary>
-        /// Updates the information stored in the <see cref="T:RegawMOD.Java" /> class
+        /// Updates the information stored in the <see cref="T:AndroidLib.Utils.Java" /> class
         /// </summary>
         /// <remarks>Generally called if Java installation might have changed</remarks>
         public static void Update()

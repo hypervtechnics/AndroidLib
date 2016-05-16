@@ -43,6 +43,9 @@
     <Compile Include="Classes\Base\Adb.cs" />
     <Compile Include="Classes\Base\Shell.cs" />
     <Compile Include="Classes\Enums.cs" />
+    <Compile Include="Classes\Interaction\BackupRestoreManager\BackupFile.cs" />
+    <Compile Include="Classes\Interaction\BackupRestoreManager\BackupFileHashInformation.cs" />
+    <Compile Include="Classes\Interaction\BackupRestoreManager\BackupFileInfo.cs" />
     <Compile Include="Classes\Results\AdbInstallResult.cs" />
     <Compile Include="Classes\Results\AdbPushPullResult.cs" />
     <Compile Include="Classes\Base\Device.cs" />
@@ -50,10 +53,10 @@
     <Compile Include="Classes\Utils\Array.cs" />
     <Compile Include="Classes\Utils\Command.cs" />
     <Compile Include="Classes\Utils\Java.cs" />
-    <Compile Include="Classes\Wrapper\BaR\Backup.cs" />
-    <Compile Include="Classes\Wrapper\BaR\BackupRestoreManager.cs" />
-    <Compile Include="Classes\Wrapper\PackageManager\Package.cs" />
-    <Compile Include="Classes\Wrapper\PackageManager\PackageManager.cs" />
+    <Compile Include="Classes\Interaction\BackupRestoreManager\Backup.cs" />
+    <Compile Include="Classes\Interaction\BackupRestoreManager\BackupRestoreManager.cs" />
+    <Compile Include="Classes\Interaction\PackageManager\Package.cs" />
+    <Compile Include="Classes\Interaction\PackageManager\PackageManager.cs" />
     <Compile Include="Internal Classes\ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -63,7 +66,9 @@
     <Content Include="External\ADB\AdbWinApi.dll" />
     <Content Include="External\ADB\AdbWinUsbApi.dll" />
     <Content Include="External\Note.txt" />
-    <Content Include="Notes\AdbPull.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\Interaction\FileSystem\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

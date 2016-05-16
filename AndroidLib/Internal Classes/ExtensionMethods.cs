@@ -40,12 +40,12 @@ namespace AndroidLib
     static class SubstringExtensions
     {
         /// <summary>
-        /// Get string value between [first] a and [last] b.
+        /// Get string value between [first] a and [next] b.
         /// </summary>
         public static string Between(this string value, string a, string b)
         {
             int posA = value.IndexOf(a);
-            int posB = value.LastIndexOf(b);
+            int posB = value.IndexOf(b, posA);
             if (posA == -1)
             {
                 return "";

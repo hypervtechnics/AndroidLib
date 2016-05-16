@@ -45,4 +45,10 @@
         Low = 2000,
         VeryLow = 3000
     }
+
+    public enum BackupFileVersion
+    {
+        Version1 = 1,
+        Version2 = 2
+    }
 }
