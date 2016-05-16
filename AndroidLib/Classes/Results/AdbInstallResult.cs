@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AndroidLib.Results
+namespace AndroidLib
 {
     public class AdbInstallResult
     {

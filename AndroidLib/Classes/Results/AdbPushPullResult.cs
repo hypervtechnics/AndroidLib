@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AndroidLib.Results
+namespace AndroidLib
 {
     public class AdbPushPullResult
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using AndroidLib.Utils;
 
-namespace AndroidLib.Base
+namespace AndroidLib
 {
     public class ADB
     {
@@ -161,7 +161,7 @@ namespace AndroidLib.Base
 
             foreach (Device dev in connectedDevices)
             {
-                if (dev.SerialNumber == serialNo) return true;
+                if (dev.SerialNumber.Equals(serialNo)) return true;
             }
 
             return false;

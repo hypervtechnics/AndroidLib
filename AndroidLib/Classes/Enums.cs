@@ -36,4 +36,13 @@
         Internal = 1,
         External = 2
     }
+
+    public enum CheckInterval
+    {
+        FastestPossible = 1,
+        VeryHigh = 400,
+        Middle = 1000,
+        Low = 2000,
+        VeryLow = 3000
+    }
 }

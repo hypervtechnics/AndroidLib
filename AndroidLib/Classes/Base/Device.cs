@@ -1,9 +1,8 @@
-﻿using AndroidLib.Results;
-using AndroidLib.Wrapper;
+﻿using AndroidLib.Wrapper;
 using System;
 using System.Collections.Generic;
 
-namespace AndroidLib.Base
+namespace AndroidLib
 {
     public class Device
     {
@@ -121,7 +120,7 @@ namespace AndroidLib.Base
         /// <summary>
         /// Returns an BackupRestore instance to manage backup and restore of files
         /// </summary>
-        public BackupRestoreManager BackupRecover
+        public BackupRestoreManager BackupRestoreManager
         {
             get
             {

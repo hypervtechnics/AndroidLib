@@ -52,7 +52,6 @@
     <Compile Include="Classes\Utils\Java.cs" />
     <Compile Include="Classes\Wrapper\BaR\Backup.cs" />
     <Compile Include="Classes\Wrapper\BaR\BackupRestoreManager.cs" />
-    <Compile Include="Classes\Wrapper\BaR\Restore.cs" />
     <Compile Include="Classes\Wrapper\PackageManager\Package.cs" />
     <Compile Include="Classes\Wrapper\PackageManager\PackageManager.cs" />
     <Compile Include="Internal Classes\ExtensionMethods.cs" />
