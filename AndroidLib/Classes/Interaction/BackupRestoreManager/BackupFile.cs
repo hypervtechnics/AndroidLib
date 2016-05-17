@@ -64,5 +64,48 @@ namespace AndroidLib.Interaction
 
             return !mFileInfo.EncryptedInformation.ValuesAreEmpty();
         }
+
+        /// <summary>
+        /// Extracts the file to the specified tar file
+        /// </summary>
+        /// <param name="targetPath">The path of the tar file</param>
+        /// <returns>If the process was successful</returns>
+        public bool ExtractToTarFile(string targetPath)
+        {
+            try
+            {
+                Java.Update();
+                string output = Java.RunJarWithOutput(ResourceManager.abePath, new string[] { "-debug", "unpack", "\"" + mFilePath + "\"", "\"" + targetPath + "\"", mPassword });
+
+                return output.Contains("bytes written to") && System.IO.File.Exists(targetPath) && new FileInfo(targetPath).Length > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Packs the .ab file from the given .tar file
+        /// </summary>
+        /// <param name="sourceTarFile">The tar file to pack</param>
+        /// <param name="targetAbFile">The target ab file</param>
+        /// <param name="version">The version of the .ab file. Use <see cref="BackupFileVersion.Version2"/> for Android 4.4.3 or higher</param>
+        /// <param name="password">The password used</param>
+        /// <returns>True if the process was successful</returns>
+        public static bool PackFromTarFile(string sourceTarFile, string targetAbFile, BackupFileVersion version = BackupFileVersion.Version1, string password = "")
+        {
+            try
+            {
+                Java.Update();
+                string output = Java.RunJarWithOutput(ResourceManager.abePath, new string[] { "-debug", version == BackupFileVersion.Version1 ? "pack" : "pack-kk", "\"" + sourceTarFile + "\"", "\"" + targetAbFile + "\"", password });
+
+                return output.Contains("bytes written to") && System.IO.File.Exists(targetAbFile) && new FileInfo(targetAbFile).Length > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

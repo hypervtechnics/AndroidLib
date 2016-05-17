@@ -9,6 +9,22 @@ namespace AndroidLib.Interaction
 {
     public class BackupFileInfo
     {
+        /// <summary>
+        /// When this returns true the system is able to deal with crypted backup files. If not you have to download the files from http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html and put them in the lib/security folder of all your Java SE 7 or 8 installations
+        /// </summary>
+        public static bool SystemIsAbleToDealWithEncryptedFiles()
+        {
+            Java.Update();
+            string output = Java.RunJarWithOutput(ResourceManager.abePath, new string[0]);
+            return output.Contains("Strong AES encryption allowed");
+        }
+
+        /// <summary>
+        /// Reads the information from the given .ab file
+        /// </summary>
+        /// <param name="path">The path of the .ab file</param>
+        /// <param name="password">The password to use</param>
+        /// <returns>The BackupFileInfo instance</returns>
         public static BackupFileInfo FromFile(string path, string password = "none")
         {
             BackupFileInfo result = new BackupFileInfo();
@@ -20,7 +36,6 @@ namespace AndroidLib.Interaction
             result.algorithm = output.Between("Algorithm: ", "\r\n");
             result.compressed = (output.Between("Compressed: ", "\r\n").Contains("1") ? true : false);
             result.version = (output.Between("Version: ", "\r\n").Contains("1") ? BackupFileVersion.Version1 : BackupFileVersion.Version2);
-            result.encryptedFilesCanBeHandled = output.Contains("Strong AES encryption allowed");
 
             BackupFileEncryptedInformation ei = new BackupFileEncryptedInformation();
             if(!output.Contains("Exception") && output.Contains("IV: "))
@@ -40,7 +55,6 @@ namespace AndroidLib.Interaction
 
         public BackupFileInfo()
         {
-            encryptedFilesCanBeHandled = false;
             version = BackupFileVersion.Version1;
             magic = "ANDROID BACKUP";
             compressed = true;
@@ -49,7 +63,6 @@ namespace AndroidLib.Interaction
         }
         
         private BackupFileEncryptedInformation encrytedInformation;
-        private bool encryptedFilesCanBeHandled;
         private BackupFileVersion version;
         private string magic;
         private bool compressed;
@@ -107,17 +120,6 @@ namespace AndroidLib.Interaction
             get
             {
                 return algorithm;
-            }
-        }
-
-        /// <summary>
-        /// When this returns true the system is able to deal with crypted backup files. If not you have to download the files from http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html and put them in the lib/security folder of all your Java SE 7 or 8 installations
-        /// </summary>
-        public bool EncryptedFilesCanBeHandled
-        {
-            get
-            {
-                return encryptedFilesCanBeHandled;
             }
         }
 
