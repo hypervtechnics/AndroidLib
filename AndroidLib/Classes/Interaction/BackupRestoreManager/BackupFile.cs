@@ -107,5 +107,15 @@ namespace AndroidLib.Interaction
                 return false;
             }
         }
+        
+        /// <summary>
+        /// When this returns true the system is able to deal with crypted backup files. If not you have to download the files from http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html and put them in the lib/security folder of all your Java SE 7 or 8 installations
+        /// </summary>
+        public static bool SystemIsAbleToDealWithEncryptedFiles()
+        {
+            Java.Update();
+            string output = Java.RunJarWithOutput(ResourceManager.abePath, new string[0]);
+            return output.Contains("Strong AES encryption allowed");
+        }
     }
 }

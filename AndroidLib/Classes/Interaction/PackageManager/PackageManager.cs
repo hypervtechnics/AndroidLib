@@ -8,7 +8,7 @@ namespace AndroidLib.Interaction
         private List<Package> mPackages;
         private InstallLocationType mInstallLocation;
 
-        internal Device mDevice;
+        private Device mDevice;
 
         internal PackageManager(Device dev)
         {

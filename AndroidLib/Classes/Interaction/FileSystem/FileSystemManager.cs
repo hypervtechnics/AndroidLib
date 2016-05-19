@@ -1,0 +1,142 @@
+﻿using AndroidLib.Results;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Globalization;
+
+namespace AndroidLib.Interaction
+{
+    public class FileSystemManager
+    {
+        private Device mDevice;
+
+        internal FileSystemManager(Device device)
+        {
+            mDevice = device;
+        }
+
+        /// <summary>
+        /// Returns the realpath of a symbolic link
+        /// </summary>
+        /// <param name="symLink">The path of the symlinked object</param>
+        /// <returns>The same as given if it is no symbolic link</returns>
+        public string ResolveSymbolicLink(string symLink)
+        {
+            if (mDevice.ConnectionStatus != DeviceState.Online)
+            {
+                return symLink;
+            }
+
+            Shell shell = mDevice.CommandShell;
+            return shell.Exec("realpath \"" + symLink + "\"").Before("\r\r\n");
+        }
+
+        /// <summary>
+        /// Gets the objects from the given path
+        /// </summary>
+        /// <param name="dir">The path</param>
+        /// <returns>A list ordered by name</returns>
+        public InteractionResult<List<FileSystemObject>> GetFilesFromDir(string dir)
+        {
+            List<FileSystemObject> result = new List<FileSystemObject>();
+
+            //Safety check
+            if(mDevice.ConnectionStatus != DeviceState.Online)
+            {
+                return new InteractionResult<List<FileSystemObject>>(result, false, new Exception("Device not online"));
+            }
+
+            //Execute command
+            Shell shell = mDevice.CommandShell;
+            string output = shell.Exec("ls -a \"" + dir + "\"");
+
+            //Check for errors
+            if(output.Contains("opendir failed"))
+            {
+                return new InteractionResult<List<FileSystemObject>>(result, false, new Exception(output.After("opendir failed, ")));
+            }
+
+            //Split and prepare regex
+            string[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            Regex regex = new Regex(@"^(?P<permissions>[dl\-][rwx\-]+) (?P<owner>\w+)\W+(?P<group>[\w_]+)\W*(?P<size>\d+)?\W+(?P<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) (?P<name>.+)$");
+
+            //Go thorough each line
+            foreach (string line in lines)
+            {
+                Match match = regex.Match(line);
+
+                if (!match.Success) continue;
+
+                //Basic variables
+                bool isDir = false;
+                bool isLink = false;
+
+                //Parse filname
+                string filename = match.Groups["name"].Value;
+
+                //Determining type
+                if (match.Groups["permissions"].Value.StartsWith("l")) { filename = filename.Before(" -> "); isLink = true; }
+                else if(match.Groups["permissions"].Value.StartsWith("d")) { isDir = true; }
+
+                //Building of path
+                string path = dir + filename;
+                
+                //Parse of last edit date
+                DateTime lastEdit = DateTime.ParseExact(match.Groups["datetime"].Value, "%Y-%m-%d %H:%M", CultureInfo.InvariantCulture);
+
+                //Parse of owner
+                string owner = match.Groups["owner"].Value;
+
+                //Parse of group
+                string group = match.Groups["group"].Value;
+
+                //Parse of size
+                long size = long.Parse(match.Groups["size"].Value);
+
+                //Parse of permissions
+                char[] pl = match.Groups["permissions"].Value.ToCharArray();
+                FileSystemObjectPermissionGroup userGroup = new FileSystemObjectPermissionGroup(pl[1] == 'r', pl[2] == 'w', pl[3] == 'x');
+                FileSystemObjectPermissionGroup ownerGroup = new FileSystemObjectPermissionGroup(pl[4] == 'r', pl[5] == 'w', pl[6] == 'x');
+                FileSystemObjectPermissionGroup otherGroup = new FileSystemObjectPermissionGroup(pl[7] == 'r', pl[8] == 'w', pl[9] == 'x');
+                FileSystemObjectPermissions permissions = new FileSystemObjectPermissions(userGroup, ownerGroup, otherGroup);
+
+                //Add to results
+                result.Add(new FileSystemObject(path, filename, owner, group, size, permissions, isDir, isLink, lastEdit));
+            }
+
+            return new InteractionResult<List<FileSystemObject>>(result, true, null); ;
+        }
+
+        /// <summary>
+        /// Gets all files recursivly from the given directory
+        /// </summary>
+        /// <param name="dir">The path</param>
+        /// <returns>The list with all files</returns>
+        public InteractionResult<List<FileSystemObject>> GetFilesFromDirRecursive(string dir)
+        {
+            List<FileSystemObject> result = new List<FileSystemObject>();
+            Queue<string> toScan = new Queue<string>();
+
+            toScan.Enqueue(dir);
+
+            while(toScan.Count > 0)
+            {
+                InteractionResult<List<FileSystemObject>> res = this.GetFilesFromDir(toScan.Dequeue());
+                
+                if(res.WasSuccessfull)
+                {
+                    foreach(FileSystemObject fso in res.ResultObject)
+                    {
+                        if (fso.IsDirectory) toScan.Enqueue(fso.Path);
+                        else if (!fso.IsDirectory && !fso.IsLink) result.Add(fso);
+                    }
+                }
+            }
+
+            return new InteractionResult<List<FileSystemObject>>(result, true, null);
+        }
+    }
+}

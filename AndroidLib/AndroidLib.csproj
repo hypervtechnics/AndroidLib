@@ -46,10 +46,14 @@
     <Compile Include="Classes\Interaction\BackupRestoreManager\BackupFile.cs" />
     <Compile Include="Classes\Interaction\BackupRestoreManager\BackupFileHashInformation.cs" />
     <Compile Include="Classes\Interaction\BackupRestoreManager\BackupFileInfo.cs" />
+    <Compile Include="Classes\Interaction\FileSystem\FileSystemManager.cs" />
+    <Compile Include="Classes\Interaction\FileSystem\FileSystemObject.cs" />
+    <Compile Include="Classes\Interaction\FileSystem\FileSystemObjectPermissions.cs" />
     <Compile Include="Classes\Results\AdbInstallResult.cs" />
     <Compile Include="Classes\Results\AdbPushPullResult.cs" />
     <Compile Include="Classes\Base\Device.cs" />
     <Compile Include="Classes\ResourceManager.cs" />
+    <Compile Include="Classes\Results\InteractionResult.cs" />
     <Compile Include="Classes\Utils\Array.cs" />
     <Compile Include="Classes\Utils\Command.cs" />
     <Compile Include="Classes\Utils\Java.cs" />
@@ -67,9 +71,7 @@
     <Content Include="External\ADB\AdbWinUsbApi.dll" />
     <Content Include="External\Note.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\Interaction\FileSystem\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
