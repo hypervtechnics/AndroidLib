@@ -51,7 +51,7 @@ namespace AndroidLib.Interaction
 
             //Execute command
             Shell shell = mDevice.CommandShell;
-            string output = shell.Exec("ls -a \"" + dir + "\"");
+            string output = shell.Exec("ls -l -a \"" + dir + "\"");
 
             //Check for errors
             if(output.Contains("opendir failed"))
@@ -61,7 +61,8 @@ namespace AndroidLib.Interaction
 
             //Split and prepare regex
             string[] lines = output.Split(new string[] { "\r\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            Regex regex = new Regex(@"^(?P<permissions>[dl\-][rwx\-]+) (?P<owner>\w+)\W+(?P<group>[\w_]+)\W*(?P<size>\d+)?\W+(?P<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) (?P<name>.+)$");
+            //Regex regex = new Regex(@"^(?P<permissions>[dl\-][rwx\-]+) (?P<owner>\w+)\W+(?P<group>[\w_]+)\W*(?P<size>\d+)?\W+(?P<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) (?P<name>.+)$");
+            Regex regex = new Regex(@"^(?<permissions>[dl\-][rwx\-]+) (?<owner>\w+)\W+(?<group>[\w_]+)\W*(?<size>\d+)?\W+(?<datetime>\d{4}-\d{2}-\d{2} \d{2}:\d{2}) (?<name>.+)$");
 
             //Go thorough each line
             foreach (string line in lines)
@@ -73,6 +74,7 @@ namespace AndroidLib.Interaction
                 //Basic variables
                 bool isDir = false;
                 bool isLink = false;
+                long size = 0L;
 
                 //Parse filname
                 string filename = match.Groups["name"].Value;
@@ -85,7 +87,7 @@ namespace AndroidLib.Interaction
                 string path = dir + filename;
                 
                 //Parse of last edit date
-                DateTime lastEdit = DateTime.ParseExact(match.Groups["datetime"].Value, "%Y-%m-%d %H:%M", CultureInfo.InvariantCulture);
+                DateTime lastEdit = DateTime.ParseExact(match.Groups["datetime"].Value, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
                 //Parse of owner
                 string owner = match.Groups["owner"].Value;
@@ -93,8 +95,8 @@ namespace AndroidLib.Interaction
                 //Parse of group
                 string group = match.Groups["group"].Value;
 
-                //Parse of size
-                long size = long.Parse(match.Groups["size"].Value);
+                //Parse of size if it is a file
+                long.TryParse(match.Groups["size"].Value, out size);
 
                 //Parse of permissions
                 char[] pl = match.Groups["permissions"].Value.ToCharArray();
@@ -126,9 +128,9 @@ namespace AndroidLib.Interaction
             {
                 InteractionResult<List<FileSystemObject>> res = this.GetFilesFromDir(toScan.Dequeue());
                 
-                if(res.WasSuccessfull)
+                if(res.WasSuccessful)
                 {
-                    foreach(FileSystemObject fso in res.ResultObject)
+                    foreach(FileSystemObject fso in res.Result)
                     {
                         if (fso.IsDirectory) toScan.Enqueue(fso.Path);
                         else if (!fso.IsDirectory && !fso.IsLink) result.Add(fso);

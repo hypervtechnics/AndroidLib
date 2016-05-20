@@ -129,6 +129,17 @@ namespace AndroidLib
         }
 
         /// <summary>
+        /// Returns a filesystem instance which can be used for access the device's file system
+        /// </summary>
+        public FileSystemManager FileSystem
+        {
+            get
+            {
+                return new FileSystemManager(this);
+            }
+        }
+
+        /// <summary>
         /// Pulls the file or directory from the device
         /// </summary>
         /// <param name="pathOnDevice">The path of the file or directory on the device</param>

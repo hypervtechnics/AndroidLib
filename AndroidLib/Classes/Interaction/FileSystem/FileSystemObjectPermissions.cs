@@ -19,7 +19,7 @@ namespace AndroidLib.Interaction
         {
             get
             {
-                return users;
+                return user;
             }
         }
 

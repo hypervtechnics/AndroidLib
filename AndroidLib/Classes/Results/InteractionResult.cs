@@ -15,18 +15,18 @@ namespace AndroidLib.Results
         /// <summary>
         /// Indicates whether the process was successfull
         /// </summary>
-        public bool WasSuccessfull
+        public bool WasSuccessful
         {
             get
             {
-                return wasSuccessfull;
+                return wasSuccessful;
             }
         }
-
+        
         /// <summary>
         /// The result of the process if the process was successful
         /// </summary>
-        public T ResultObject
+        public T Result
         {
             get
             {
