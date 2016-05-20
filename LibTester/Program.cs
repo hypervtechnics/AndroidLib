@@ -20,7 +20,7 @@ namespace LibTester
             /////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////////////////////Working area///////////////////////////////////////////
             FileSystemManager fsm = d.FileSystem;
-            InteractionResult<List<FileSystemObject>> res = fsm.GetFilesFromDir("/");
+            InteractionResult<List<FileSystemObject>> res = fsm.GetFilesFromDirRecursive("/sdcard/");
             Console.WriteLine(res.WasSuccessful.ToString());
             List<FileSystemObject> fsos = res.Result;
             foreach(FileSystemObject fso in fsos)

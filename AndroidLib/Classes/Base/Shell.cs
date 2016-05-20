@@ -34,7 +34,7 @@ namespace AndroidLib
             string temp = ADB.ExecuteAdbCommandWithOutput(cmd, mDevice);
 
             //Remove the last line delimiter
-            return temp.Substring(0, temp.LastIndexOf("\r\r\n"));
+            return temp;
         }
     }
 }
