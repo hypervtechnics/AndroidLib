@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="External\ABE\abe.jar" />
+    <Content Include="External\ABE\License.txt" />
     <Content Include="External\ADB\adb.exe" />
     <Content Include="External\ADB\AdbWinApi.dll" />
     <Content Include="External\ADB\AdbWinUsbApi.dll" />

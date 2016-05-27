@@ -12,10 +12,12 @@ namespace AndroidLib.Interaction
     public class FileSystemManager
     {
         private Device mDevice;
+        private bool mHasRoot;
 
         internal FileSystemManager(Device device)
         {
             mDevice = device;
+            mHasRoot = mDevice.HasRoot;
         }
 
         /// <summary>
@@ -31,16 +33,15 @@ namespace AndroidLib.Interaction
             }
 
             Shell shell = mDevice.CommandShell;
-            return shell.Exec("realpath \"" + symLink + "\"").Before("\r\r\n");
+            return shell.Exec("realpath \"" + symLink + "\"", mHasRoot).Before("\r\r\n");
         }
 
         /// <summary>
         /// Gets the objects from the given path. Recommended to end the path with "/"
         /// </summary>
         /// <param name="dir">The path</param>
-        /// <param name="useRoot">Use root if available. Check it before!</param>
         /// <returns>A list ordered by name</returns>
-        public InteractionResult<List<FileSystemObject>> GetFilesFromDir(string dir, bool useRoot = false)
+        public InteractionResult<List<FileSystemObject>> GetFilesFromDir(string dir)
         {
             List<FileSystemObject> result = new List<FileSystemObject>();
 
@@ -52,7 +53,7 @@ namespace AndroidLib.Interaction
 
             //Execute command
             Shell shell = mDevice.CommandShell;
-            string output = shell.Exec("ls -l -a \"" + dir + "\"", useRoot);
+            string output = shell.Exec("ls -l -a \"" + dir + "\"", mHasRoot);
 
             //Check for errors
             if(output.Contains("opendir failed"))
@@ -119,19 +120,18 @@ namespace AndroidLib.Interaction
         /// Gets all files recursivly from the given directory. Recommended to end the path with "/"
         /// </summary>
         /// <param name="dir">The path</param>
-        /// <param name="useRoot">Use root if available./param>
         /// <returns>The list with all files</returns>
-        public InteractionResult<List<FileSystemObject>> GetFilesFromDirRecursive(string dir, bool useRoot = false)
+        public InteractionResult<List<FileSystemObject>> GetFilesFromDirRecursive(string dir)
         {
             List<FileSystemObject> result = new List<FileSystemObject>();
             Queue<string> toScan = new Queue<string>();
-            bool root = useRoot ? mDevice.HasRoot : false;
+            bool root = mHasRoot ? mDevice.HasRoot : false;
 
             toScan.Enqueue(dir);
 
             while(toScan.Count > 0)
             {
-                InteractionResult<List<FileSystemObject>> res = this.GetFilesFromDir(toScan.Dequeue(), root);
+                InteractionResult<List<FileSystemObject>> res = this.GetFilesFromDir(toScan.Dequeue());
                 
                 if(res.WasSuccessful)
                 {
@@ -150,12 +150,11 @@ namespace AndroidLib.Interaction
         /// Renames and/or moves a file.
         /// </summary>
         /// <param name="sourceFile">The path to the source file</param>
-        /// <param name="targetFile">The target file or path. If only a path is passed the file won't be renamed.</param>
-        /// <param name="useRoot">Use root to move file.</param>
+        /// <param name="targetFile">The target file or path. If only a path is passed the file won't be renamed while moving.</param>
         /// <returns></returns>
-        public InteractionResult<string> MoveOrRenameFile(string sourceFile, string targetFile, bool useRoot = false)
+        public InteractionResult<string> MoveFile(string sourceFile, string targetFile)
         {
-            string output = mDevice.CommandShell.Exec("mv \"" + sourceFile + "\" \"" + targetFile + "\"", useRoot);
+            string output = mDevice.CommandShell.Exec("mv \"" + sourceFile + "\" \"" + targetFile + "\"", mHasRoot);
 
             if (output.StartsWith("failed on '"))
             {
@@ -170,21 +169,27 @@ namespace AndroidLib.Interaction
         /// Removes the file or folder from file system
         /// </summary>
         /// <param name="path">The path of the object</param>
-        /// <param name="useRoot">Use root for removal.</param>
         /// <returns>The output</returns>
-        public string RemoveObject(string path, bool useRoot = false)
+        public InteractionResult<string> RemoveObject(string path)
         {
-            return mDevice.CommandShell.Exec("rm -r -f \"" + path +"\"", useRoot);
+            string output = mDevice.CommandShell.Exec("rm -r \"" + path +"\"", mHasRoot);
+
+            if(output.StartsWith("rm failed for"))
+            {
+                return new InteractionResult<string>(output, false, new Exception(output.After(path + ",")));
+            }else
+            {
+                return new InteractionResult<string>(output, true, null);
+            }
         }
 
         /// <summary>
         /// Creates an empty file
         /// </summary>
         /// <param name="path">The path of the file to create</param>
-        /// <param name="useRoot">Use root to create empty file.</param>
-        public void CreateEmptyFile(string path, bool useRoot = false)
+        public void CreateEmptyFile(string path)
         {
-            mDevice.CommandShell.Exec("touch \"" + path + "\"", useRoot);
+            mDevice.CommandShell.Exec("touch \"" + path + "\"", mHasRoot);
         }
 
         /// <summary>
@@ -192,11 +197,61 @@ namespace AndroidLib.Interaction
         /// </summary>
         /// <param name="sourceFile">The file to copy</param>
         /// <param name="targetFile">The target path</param>
-        /// <param name="useRoot">Use root to copy file</param>
         /// <returns>The output</returns>
-        public string CopyObject(string sourceFile, string targetFile, bool useRoot = false)
+        public InteractionResult<string> CopyObject(string sourceFile, string targetFile)
         {
-            return mDevice.CommandShell.Exec("cp \"" + sourceFile + "\" \"" + targetFile + "\"", useRoot);
+            string output = mDevice.CommandShell.Exec("cp \"" + sourceFile + "\" \"" + targetFile + "\"", mHasRoot);
+
+            if(output.StartsWith("cp: "))
+            {
+                return new InteractionResult<string>(output, false, new Exception(output.After(output.Contains(sourceFile) ? output.After(sourceFile + ": ") : output.After(targetFile + ": "))));
+            }
+            else
+            {
+                return new InteractionResult<string>(output, true, null);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new directory. Also used to update the permissions of an existing directory
+        /// </summary>
+        /// <param name="path">The path to the directory</param>
+        /// <param name="createParentDirectories">Create all directories that need to be created</param>
+        /// <returns>The output</returns>
+        public InteractionResult<string> MakeDirectory(string path, bool createParentDirectories = false)
+        {
+            string command = "mkdir ";
+            if(createParentDirectories) { command += "-p "; }
+            command += "\"" + path + "\"";
+
+            string output = mDevice.CommandShell.Exec(command, mHasRoot);
+
+            if(output.StartsWith("mkdir failed for"))
+            {
+                return new InteractionResult<string>(output, false, new Exception(output.After("/,")));
+            }
+            else
+            {
+                return new InteractionResult<string>(output, true, null);
+            }
+        }
+
+        /// <summary>
+        /// Changes the permissions of the given object
+        /// </summary>
+        /// <param name="path">The path to the object</param>
+        /// <param name="newPermissions">The permissions in octal notation</param>
+        /// <returns>The output</returns>
+        public InteractionResult<string> ChangePermissions(string path, int newPermissions)
+        {
+            string output = mDevice.CommandShell.Exec("chmod " + newPermissions + " \"" + path + "\"", mHasRoot);
+
+            if(output.StartsWith("Unable to chmod"))
+            {
+            }else
+            {
+                return new InteractionResult<string>(output, true, null);
+            }
         }
     }
 }
