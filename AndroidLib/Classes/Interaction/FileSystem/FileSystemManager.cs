@@ -248,6 +248,7 @@ namespace AndroidLib.Interaction
 
             if(output.StartsWith("Unable to chmod"))
             {
+                return new InteractionResult<string>(output, false, new Exception(output.After(path + ": ")));
             }else
             {
                 return new InteractionResult<string>(output, true, null);
