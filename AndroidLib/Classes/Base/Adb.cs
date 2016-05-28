@@ -49,16 +49,16 @@ namespace AndroidLib
         /// Executes the adb command on a specific device and returns its output
         /// </summary>
         /// <param name="command">Command to run e.g. "devices"</param>
-        /// <param name="device">If this parameter is not set the first device will be selected</param>
+        /// <param name="serialNo">The serial number of the device</param>
         /// <returns>The optimized output of adb</returns>
-        public static string ExecuteAdbCommandWithOutput(string command, Device device = null)
+        public static string ExecuteAdbCommandWithOutput(string command, string serialNo = "")
         {
             //Check adb status
             if (!IsServerRunning) StartServer();
 
             //Insert -s parameter if needed
             string cmd = command;
-            if (device != null && device.SerialNumber != "") cmd = " -s " + device.SerialNumber + " " + cmd;
+            if (serialNo != "") cmd = " -s " + serialNo + " " + cmd;
 
             //Run process via Command class
             string output = Command.RunProcessReturnOutput(ResourceManager.adbPrefix, cmd);

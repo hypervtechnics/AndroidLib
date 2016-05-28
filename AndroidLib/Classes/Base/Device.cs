@@ -113,7 +113,7 @@ namespace AndroidLib
         {
             get
             {
-                return new Shell(this);
+                return new Shell(this.SerialNumber);
             }
         }
 
@@ -124,7 +124,7 @@ namespace AndroidLib
         {
             get
             {
-                return new BackupRestoreManager(this);
+                return new BackupRestoreManager(this.SerialNumber);
             }
         }
 
@@ -148,7 +148,7 @@ namespace AndroidLib
         public AdbPushPullResult Pull(string pathOnDevice, string pathOnComputer)
         {
             //Do it and get its output for further analysis
-            string output = ADB.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this);
+            string output = ADB.ExecuteAdbCommandWithOutput("pull \"" + pathOnDevice + "\" \"" + pathOnComputer + "\"", this.SerialNumber);
 
             //Split it into the lines
             string[] lines = output.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -221,7 +221,7 @@ namespace AndroidLib
         public AdbPushPullResult Push(string pathOnComputer, string pathOnDevice)
         {
             //Do it and get its output for further analysis
-            string output = ADB.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this);
+            string output = ADB.ExecuteAdbCommandWithOutput("push \"" + pathOnComputer + "\" \"" + pathOnDevice + "\"", this.SerialNumber);
 
             //Split it into the lines
             string[] lines = output.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -290,7 +290,7 @@ namespace AndroidLib
         /// </summary>
         public void Remount()
         {
-            ADB.ExecuteAdbCommandWithOutput("remount", this);
+            ADB.ExecuteAdbCommandWithOutput("remount", this.SerialNumber);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace AndroidLib
             if (mode == RebootMode.Bootloader) cmd += " bootloader";
             else if (mode == RebootMode.Recovery) cmd += " recovery";
 
-            ADB.ExecuteAdbCommandWithOutput(cmd, this);
+            ADB.ExecuteAdbCommandWithOutput(cmd, this.SerialNumber);
         }
     }
 }

@@ -9,11 +9,11 @@ namespace AndroidLib.Interaction
 {
     public class BackupRestoreManager
     {
-        private Device mDevice;
+        private string mSerialNo;
 
-        internal BackupRestoreManager(Device device)
+        internal BackupRestoreManager(string serialNo)
         {
-            mDevice = device;
+            mSerialNo = serialNo;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace AndroidLib.Interaction
             }
 
             //Create object
-            Backup backup = new Backup(command, mDevice, filename, (int) interval);
+            Backup backup = new Backup(command, mSerialNo, filename, (int) interval);
 
             return backup;
         }
@@ -92,7 +92,7 @@ namespace AndroidLib.Interaction
         /// <returns></returns>
         public String DoRestore(string filename)
         {
-            return ADB.ExecuteAdbCommandWithOutput("restore \"" + filename + "\"", mDevice);
+            return ADB.ExecuteAdbCommandWithOutput("restore \"" + filename + "\"", mSerialNo);
         }
     }
 }

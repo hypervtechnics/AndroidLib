@@ -54,7 +54,7 @@ namespace AndroidLib.Interaction
         /// <returns></returns>
         public bool IsInstalled(string packageName)
         {
-            return ADB.ExecuteAdbCommandWithOutput("pm list packages " + packageName, mDevice).Contains(packageName);
+            return mDevice.CommandShell.Exec("pm list packages " + packageName).Contains(packageName);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace AndroidLib.Interaction
             if (grantAllPermissions) command += "-g ";
             command += "\"" + apkPath + "\"";
 
-            string output = ADB.ExecuteAdbCommandWithOutput(command, mDevice);
+            string output = ADB.ExecuteAdbCommandWithOutput(command, mDevice.SerialNumber);
 
             //Return it
             return new AdbInstallResult(output.Contains("Success"), output);
@@ -175,7 +175,7 @@ namespace AndroidLib.Interaction
 
             command += packageName;
 
-            return ADB.ExecuteAdbCommandWithOutput(command, mDevice).Contains("Success");
+            return ADB.ExecuteAdbCommandWithOutput(command, mDevice.SerialNumber).Contains("Success");
         }
     }
 }

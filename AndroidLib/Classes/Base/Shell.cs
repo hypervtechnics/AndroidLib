@@ -10,11 +10,11 @@ namespace AndroidLib
 {
     public class Shell
     {
-        private Device mDevice;
+        private string mSerialNo;
 
-        internal Shell(Device device)
+        internal Shell(string serialNo)
         {
-            mDevice = device;
+            mSerialNo = serialNo;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace AndroidLib
             cmd += command;
 
             //Execute and return output
-            string temp = ADB.ExecuteAdbCommandWithOutput(cmd, mDevice);
+            string temp = ADB.ExecuteAdbCommandWithOutput(cmd, mSerialNo);
 
             //Remove the last line delimiter
             return temp;

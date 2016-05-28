@@ -8,7 +8,7 @@ namespace AndroidLib.Interaction
     public class Backup : IDisposable
     {
         private long mLastSize;
-        private Device mDevice;
+        private string mSerialNo;
         private Process mProcess;
         private Thread mThread;
         private string mFilename;
@@ -144,18 +144,18 @@ namespace AndroidLib.Interaction
             }
         }
 
-        internal Backup(string command, Device device, string filename, int backupCheckTime)
+        internal Backup(string command, string serialNo, string filename, int backupCheckTime)
         {
             mProcess = new Process();
             mProcess.StartInfo.FileName = ResourceManager.adbPrefix;
-            mProcess.StartInfo.Arguments = "-s " + device.SerialNumber + " " + command;
+            mProcess.StartInfo.Arguments = "-s " + serialNo + " " + command;
             mProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             mProcess.StartInfo.CreateNoWindow = true;
             mProcess.StartInfo.UseShellExecute = false;
             mProcess.StartInfo.RedirectStandardOutput = true;
 
             mLastSize = 0L;
-            mDevice = device;
+            mSerialNo = serialNo;
             mFilename = filename;
             mIsRunning = false;
             mPollingTime = backupCheckTime;
