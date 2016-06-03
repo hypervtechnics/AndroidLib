@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AndroidLib
 {
     //Taken from https://github.com/regaw-leinad/AndroidLib
-    internal static class ExtensionMethods
+    static class ExtensionMethods
     {
         internal static bool ContainsIgnoreCase(this string s, string str)
         {
@@ -37,8 +37,26 @@ namespace AndroidLib
     }
 
     //Taken from http://www.dotnetperls.com/between-before-after
-    static class SubstringExtensions
+    static class StringExtensions
     {
+        /// <summary>
+        /// Counts the times the given char occurs in the string
+        /// </summary>
+        /// <param name="value">The string</param>
+        /// <param name="c">The char</param>
+        /// <returns>Count of char</returns>
+        public static int ContainsCount(this string value, char c)
+        {
+            int count = 0;
+
+            foreach(char l in value.ToCharArray())
+            {
+                if (c == l) count++;
+            }
+
+            return count;
+        }
+
         /// <summary>
         /// Get string value between [first] a and [next] b.
         /// </summary>
@@ -65,9 +83,22 @@ namespace AndroidLib
         /// <summary>
         /// Get string value after [first] a.
         /// </summary>
-        public static string Before(this string value, string a)
+        public static string BeforeFirst(this string value, string a)
         {
             int posA = value.IndexOf(a);
+            if (posA == -1)
+            {
+                return "";
+            }
+            return value.Substring(0, posA);
+        }
+
+        /// <summary>
+        /// Get string value after [last] a.
+        /// </summary>
+        public static string BeforeLast(this string value, string a)
+        {
+            int posA = value.LastIndexOf(a);
             if (posA == -1)
             {
                 return "";
@@ -91,6 +122,38 @@ namespace AndroidLib
                 return "";
             }
             return value.Substring(adjustedPosA);
+        }
+
+        /// <summary>
+        /// Get the upper path of the given path
+        /// </summary>
+        /// <param name="value">The path</param>
+        /// <returns></returns>
+        public static string GetUpperPathAndroid(this string value)
+        {
+            int sc = value.ContainsCount('/');
+            if (sc > 0)
+            {
+                if (sc >= 2 && value.StartsWith("/"))
+                {
+                    string result = value.BeforeLast("/");
+
+                    if (value.EndsWith("/"))
+                    {
+                        return result.GetUpperPathAndroid();
+                    }
+
+                    return result;
+                }
+                else
+                {
+                    return "/";
+                }
+            }
+            else
+            {
+                return value;
+            }
         }
     }
 }
