@@ -204,7 +204,7 @@ namespace AndroidLib
 
             //Parse last line
             string lastLine = lines[lines.Length - 1];
-            transferrate = int.Parse(lastLine.Before(" "));
+            transferrate = int.Parse(lastLine.BeforeFirst(" "));
             size = long.Parse(lastLine.Between(" (", " bytes"));
             secondsneeded = Double.Parse(lastLine.Between("bytes in ", "s"), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
 
@@ -277,7 +277,7 @@ namespace AndroidLib
 
             //Parse last line
             string lastLine = lines[lines.Length - 1];
-            transferrate = int.Parse(lastLine.Before(" "));
+            transferrate = int.Parse(lastLine.BeforeFirst(" "));
             size = long.Parse(lastLine.Between(" (", " bytes"));
             secondsneeded = Double.Parse(lastLine.Between("bytes in ", "s"), System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo);
 

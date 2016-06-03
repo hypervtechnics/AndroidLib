@@ -5,7 +5,7 @@ using System.Threading;
 using AndroidLib;
 using AndroidLib.Results;
 
-namespace LibTester
+namespace AndroidLib
 {
     class Program
     {
@@ -16,17 +16,10 @@ namespace LibTester
             Console.WriteLine("Devices connected: " + devices.Count);
             Console.WriteLine("------------------------");
             Console.ReadKey();
-            Device d = devices[0];
+            //Device d = devices[0];
             /////////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////////////////////Working area///////////////////////////////////////////
-            FileSystemManager fsm = d.FileSystem;
-            InteractionResult<List<FileSystemObject>> res = fsm.GetFilesFromDirRecursive("/sdcard/");
-            Console.WriteLine(res.WasSuccessful.ToString());
-            List<FileSystemObject> fsos = res.Result;
-            foreach(FileSystemObject fso in fsos)
-            {
-                Console.WriteLine(fso.Path + " | " + fso.Permissions.GetAsNumber() + " | " + fso.Size + " | " + fso.IsDirectory);
-            }
+            
             /////////////////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////////////////////////////
             Console.WriteLine("Press any key to exit...");

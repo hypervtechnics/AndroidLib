@@ -33,7 +33,7 @@ namespace AndroidLib.Interaction
             }
 
             Shell shell = mDevice.CommandShell;
-            return shell.Exec("realpath \"" + symLink + "\"", mHasRoot).Before("\r\r\n");
+            return shell.Exec("realpath \"" + symLink + "\"", mHasRoot).BeforeFirst("\r\r\n");
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace AndroidLib.Interaction
         /// </summary>
         /// <param name="dir">The path</param>
         /// <returns>A list ordered by name</returns>
-        public InteractionResult<List<FileSystemObject>> GetFilesFromDir(string dir)
+        public InteractionResult<List<FileSystemObject>> GetObjectsFromDir(string dir)
         {
             List<FileSystemObject> result = new List<FileSystemObject>();
 
@@ -83,7 +83,7 @@ namespace AndroidLib.Interaction
                 string filename = match.Groups["name"].Value;
 
                 //Determining type
-                if (match.Groups["permissions"].Value.StartsWith("l")) { filename = filename.Before(" -> "); isLink = true; }
+                if (match.Groups["permissions"].Value.StartsWith("l")) { filename = filename.BeforeFirst(" -> "); isLink = true; }
                 else if(match.Groups["permissions"].Value.StartsWith("d")) { isDir = true; }
 
                 //Building of path
@@ -121,7 +121,7 @@ namespace AndroidLib.Interaction
         /// </summary>
         /// <param name="dir">The path</param>
         /// <returns>The list with all files</returns>
-        public InteractionResult<List<FileSystemObject>> GetFilesFromDirRecursive(string dir)
+        public InteractionResult<List<FileSystemObject>> GetObjectsFromDirRecursive(string dir)
         {
             List<FileSystemObject> result = new List<FileSystemObject>();
             Queue<string> toScan = new Queue<string>();
@@ -131,7 +131,7 @@ namespace AndroidLib.Interaction
 
             while(toScan.Count > 0)
             {
-                InteractionResult<List<FileSystemObject>> res = this.GetFilesFromDir(toScan.Dequeue());
+                InteractionResult<List<FileSystemObject>> res = this.GetObjectsFromDir(toScan.Dequeue());
                 
                 if(res.WasSuccessful)
                 {
@@ -253,6 +253,43 @@ namespace AndroidLib.Interaction
             {
                 return new InteractionResult<string>(output, true, null);
             }
+        }
+
+        /// <summary>
+        /// Checks if the given object exists
+        /// </summary>
+        /// <param name="path">The path of the object</param>
+        /// <returns>True if it exists</returns>
+        public InteractionResult<bool> Exists(string path)
+        {
+            string output = mDevice.CommandShell.Exec("if [ -e " + path + " ]; then echo 1; fi", mHasRoot);
+
+            return new InteractionResult<bool>(output.Contains("1"), true, null);
+        }
+
+        /// <summary>
+        /// Check the object. <see cref="InteractionResult{T}.Error.Message"/> == "Not Found" when it doesnt exist. Otherwise you will get the <see cref="FileSystemObject"/>
+        /// </summary>
+        /// <param name="path">The object to check</param>
+        /// <returns>The matching <see cref="FileSystemObject"/></returns>
+        public InteractionResult<FileSystemObject> GetObject(string path)
+        {
+            InteractionResult<List<FileSystemObject>> filesRes = this.GetObjectsFromDir(path.GetUpperPathAndroid());
+
+            if(!filesRes.WasSuccessful)
+            {
+                return new InteractionResult<FileSystemObject>(null, false, filesRes.Error);
+            }
+
+            foreach(FileSystemObject fso in filesRes.Result)
+            {
+                if(fso.Path.Equals(path))
+                {
+                    return new InteractionResult<FileSystemObject>(fso, true, null);
+                }
+            }
+
+            return new InteractionResult<FileSystemObject>(null, false, new Exception("Not Found"));
         }
     }
 }

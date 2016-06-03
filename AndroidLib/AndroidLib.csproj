@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,6 +50,7 @@
     <Compile Include="Classes\Interaction\FileSystem\FileSystemManager.cs" />
     <Compile Include="Classes\Interaction\FileSystem\FileSystemObject.cs" />
     <Compile Include="Classes\Interaction\FileSystem\FileSystemObjectPermissions.cs" />
+    <Compile Include="Classes\Interaction\Screen\ScreenMirror.cs" />
     <Compile Include="Classes\Results\AdbInstallResult.cs" />
     <Compile Include="Classes\Results\AdbPushPullResult.cs" />
     <Compile Include="Classes\Base\Device.cs" />

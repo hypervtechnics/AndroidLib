@@ -102,7 +102,7 @@ namespace AndroidLib.Interaction
                         string tempLine = lines[i].After(":");
 
                         //Now split at the "=" and create object from it
-                        mPackages.Add(new Package(false, tempLine.After("="), tempLine.Before("=")));
+                        mPackages.Add(new Package(false, tempLine.After("="), tempLine.BeforeFirst("=")));
                     }
                 }
 
@@ -123,7 +123,7 @@ namespace AndroidLib.Interaction
                         string tempLine = lines[i].After(":");
 
                         //Now split at the "=" and create object from it
-                        mPackages.Add(new Package(true, tempLine.After("="), tempLine.Before("=")));
+                        mPackages.Add(new Package(true, tempLine.After("="), tempLine.BeforeFirst("=")));
                     }
                 }
             }
